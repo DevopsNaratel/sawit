@@ -9,11 +9,13 @@ export default function K8sSecretManager() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [existingSecrets, setExistingSecrets] = useState([]);
-  const [loadingSecrets, setLoadingSecrets] = useState(true);
+  const [loadingSecrets, setLoadingSecrets] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [showValues, setShowValues] = useState({});
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [namespaces, setNamespaces] = useState([]);
+  const [loadingNamespaces, setLoadingNamespaces] = useState(true);
 
   const handlePageChange = (page) => {
     if (page === 'jenkins') {
@@ -33,6 +35,7 @@ export default function K8sSecretManager() {
 
   // Fetch existing secrets
   const fetchSecrets = async () => {
+    setLoadingSecrets(true);
     try {
       const res = await fetch(`/api/k8s/secret?namespace=${form.namespace}`);
       const data = await res.json();
@@ -45,6 +48,36 @@ export default function K8sSecretManager() {
       setLoadingSecrets(false);
     }
   };
+
+  // Fetch available namespaces
+  const fetchNamespaces = async () => {
+    try {
+      const res = await fetch('/api/k8s/namespaces');
+      const data = await res.json();
+      if (data.success) {
+        setNamespaces(data.namespaces || []);
+      }
+    } catch (error) {
+      console.error('Error fetching namespaces:', error);
+      // Fallback to default if API fails
+      setNamespaces(['default']);
+    } finally {
+      setLoadingNamespaces(false);
+    }
+  };
+
+  // Handle secret card click - AUTOFILL FORM
+  const handleSecretClick = (secretName) => {
+    setForm(prev => ({
+      ...prev,
+      secretName: secretName
+    }));
+    setMessage({ text: `Secret "${secretName}" dipilih - silakan edit dan submit untuk update`, type: 'success' });
+  };
+
+  useEffect(() => {
+    fetchNamespaces();
+  }, []);
 
   useEffect(() => {
     fetchSecrets();
@@ -287,7 +320,7 @@ export default function K8sSecretManager() {
 
               <div className="space-y-5">
                 {/* Drag & Drop Area */}
-                {form.secretData.length === 1 && !form.secretData[0].key && !form.secretData[0].value && (
+                {form.secretData.length === 1 && !form.secretData[0].key && !form.secretData[0].value && !fileName && (
                   <div
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
@@ -357,13 +390,22 @@ export default function K8sSecretManager() {
                     <label className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-1.5 block">
                       Namespace
                     </label>
-                    <input
-                      type="text"
-                      value={form.namespace}
-                      onChange={(e) => setForm({ ...form, namespace: e.target.value })}
-                      className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
-                      placeholder="default"
-                    />
+                    {loadingNamespaces ? (
+                      <div className="w-full bg-neutral-950 border border-neutral-800 rounded-lg px-4 py-2.5 flex items-center gap-2 text-neutral-500">
+                        <Loader2 size={16} className="animate-spin" />
+                        <span className="text-sm">Loading namespaces...</span>
+                      </div>
+                    ) : (
+                      <select
+                        value={form.namespace}
+                        onChange={(e) => setForm({ ...form, namespace: e.target.value })}
+                        className="w-full bg-neutral-950 border border-neutral-800 text-white rounded-lg px-4 py-2.5 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all"
+                      >
+                        {namespaces.map(ns => (
+                          <option key={ns} value={ns}>{ns}</option>
+                        ))}
+                      </select>
+                    )}
                   </div>
                 </div>
 
@@ -484,7 +526,8 @@ export default function K8sSecretManager() {
                   {existingSecrets.map((secret, idx) => (
                     <div
                       key={idx}
-                      className="bg-neutral-950 border border-neutral-800 rounded-lg p-3 hover:border-neutral-700 transition-colors"
+                      onClick={() => handleSecretClick(secret.name)}
+                      className="bg-neutral-950 border border-neutral-800 rounded-lg p-3 hover:border-purple-500 hover:bg-neutral-900/50 transition-all cursor-pointer"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
@@ -511,6 +554,7 @@ export default function K8sSecretManager() {
           <p className="mb-2"><strong className="text-white">💡 Tips:</strong></p>
           <ul className="space-y-1 ml-4 list-disc">
             <li>Upload file .env untuk load semua variabel sekaligus</li>
+            <li>Klik pada card secret di sebelah kanan untuk edit secret yang sudah ada</li>
             <li>Secret name harus huruf kecil dan dapat menggunakan dash (-)</li>
             <li>Data akan di-encode base64 secara otomatis</li>
             <li>Jika secret sudah ada, sistem akan melakukan update</li>

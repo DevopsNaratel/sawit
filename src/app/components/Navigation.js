@@ -5,6 +5,7 @@
 import { useState } from 'react';
 import { Activity, Lock, Menu, X, LogOut } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import Image from "next/image";
 
 export default function Navigation({ activePage, onPageChange }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,14 +29,33 @@ export default function Navigation({ activePage, onPageChange }) {
 
   return (
     <nav className="bg-neutral-900 border-b border-neutral-800 sticky top-0 z-50 backdrop-blur-sm bg-neutral-900/95">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="
+        mx-auto
+        px-[2rem]
+        sm:px-[3rem]
+        md:px-[5rem]
+        lg:px-[7.5rem]
+      ">
+
+      {/* <div className="max-w-7xl mx-auto px-2 sm:px-3 lg:px-4"> */}
+
         <div className="flex items-center justify-between h-16">
           {/* Logo/Brand */}
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg">
+            {/* <div className="p-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg">
               <Activity size={20} className="text-white" />
+            </div> */}
+            <div className="h-15">
+              <Image
+                src="/Logo.png"
+                alt="Logo"
+                width={120}
+                height={120}
+                className="h-full w-auto object-contain"
+                priority
+              />
             </div>
-            <span className="text-xl font-bold text-white hidden sm:block">DevOps Gateway</span>
+            <span className="text-xl font-bold text-white hidden sm:block">DevOps Dashboard</span>
           </div>
 
           {/* Desktop Menu */}

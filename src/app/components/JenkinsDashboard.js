@@ -1,61 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import { CheckCircle, XCircle, Loader2, Clock, Activity, AlertTriangle, WifiOff, Package, GitBranch } from 'lucide-react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { 
+  CheckCircle, XCircle, Loader2, Clock, Activity, 
+  AlertTriangle, WifiOff, Package, GitBranch, RefreshCw 
+} from 'lucide-react';
+
+// Helper di luar komponen agar tidak dibuat ulang setiap render
+const extractVersion = (buildName) => {
+  if (!buildName) return null;
+  const versionMatch = buildName.match(/(\d+)\.(\d+)\.(\d+)/);
+  if (!versionMatch) return null;
+  return {
+    full: versionMatch[0],
+    major: parseInt(versionMatch[1], 10),
+    minor: parseInt(versionMatch[2], 10),
+    patch: parseInt(versionMatch[3], 10)
+  };
+};
 
 export default function JenkinsDashboard() {
   const [builds, setBuilds] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true); // Loading pertama kali
+  const [isRefreshing, setIsRefreshing] = useState(false); // Loading saat background refresh
   const [actionLoading, setActionLoading] = useState(null);
   const [message, setMessage] = useState({ text: '', type: '' });
   const [apiError, setApiError] = useState(false);
+  
+  // Ref untuk menghindari race condition pada fetch yang lambat
+  const fetchCounter = useRef(0);
 
-  // Fetch pending builds
-  const fetchBuilds = async () => {
+  // 1. Optimized Fetch Logic
+  const fetchBuilds = useCallback(async (showSilentLoading = false) => {
+    const currentFetchId = ++fetchCounter.current;
+    if (showSilentLoading) setIsRefreshing(true);
+    
     try {
       const res = await fetch('/api/jenkins/pending', {
         cache: 'no-store',
-        headers: {
-          'Content-Type': 'application/json',
-        }
+        headers: { 'Content-Type': 'application/json' }
       });
 
-      if (!res.ok) {
-        console.error(`API Error: ${res.status} ${res.statusText}`);
-        setApiError(true);
-        setBuilds([]);
-        return;
-      }
+      if (currentFetchId !== fetchCounter.current) return; // Abaikan jika ada fetch yang lebih baru
 
-      const contentType = res.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        console.error('Response bukan JSON:', await res.text());
-        setApiError(true);
-        setBuilds([]);
-        return;
-      }
+      if (!res.ok) throw new Error('API_ERROR');
 
       const result = await res.json();
-      // Handle both old format (array) and new format (object with data property)
       const data = Array.isArray(result) ? result : (result.data || []);
+      
       setBuilds(data);
       setApiError(false);
     } catch (error) {
-      console.error('Error fetching builds:', error);
+      console.error('Fetch Error:', error);
       setApiError(true);
-      setBuilds([]);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
+      setIsRefreshing(false);
     }
-  };
-
-  useEffect(() => {
-    fetchBuilds();
-    const interval = setInterval(fetchBuilds, 10000);
-    return () => clearInterval(interval);
   }, []);
 
-  // Handle Approve/Abort
+  // 2. Polling Effect
+  useEffect(() => {
+    fetchBuilds();
+    const interval = setInterval(() => fetchBuilds(true), 10000);
+    return () => clearInterval(interval);
+  }, [fetchBuilds]);
+
+  // 3. Heavy Computation Memoization
+  // Logic grouping & sorting hanya berjalan jika 'builds' berubah
+  const memoizedGroups = useMemo(() => {
+    if (!builds.length) return { groups: {}, names: [] };
+
+    // Grouping
+    const groups = builds.reduce((acc, build) => {
+      const job = build.jobName;
+      if (!acc[job]) acc[job] = [];
+      acc[job].push(build);
+      return acc;
+    }, {});
+
+    // Sorting tiap group (Semantic Versioning)
+    Object.keys(groups).forEach(jobName => {
+      groups[jobName].sort((a, b) => {
+        const vA = extractVersion(a.name);
+        const vB = extractVersion(b.name);
+        
+        if (!vA && !vB) return b.timestamp - a.timestamp;
+        if (!vA) return 1;
+        if (!vB) return -1;
+        
+        if (vA.major !== vB.major) return vB.major - vA.major;
+        if (vA.minor !== vB.minor) return vB.minor - vA.minor;
+        return vB.patch - vA.patch;
+      });
+    });
+
+    const sortedNames = Object.keys(groups).sort();
+    return { groups, sortedNames };
+  }, [builds]);
+
+  // 4. Action Handler
   const handleAction = async (buildId, jobName, action) => {
-    setActionLoading(`${buildId}-${action}`);
+    const actionKey = `${buildId}-${action}`;
+    setActionLoading(actionKey);
     setMessage({ text: '', type: '' });
 
     try {
@@ -65,232 +110,156 @@ export default function JenkinsDashboard() {
         body: JSON.stringify({ buildId, jobName, action })
       });
 
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
       const data = await res.json();
-
       if (data.success) {
-        setMessage({ 
-          text: data.message, 
-          type: 'success' 
-        });
-        setTimeout(fetchBuilds, 1500);
+        setMessage({ text: data.message || 'Berhasil diproses', type: 'success' });
+        // Segera refresh data setelah aksi
+        setTimeout(() => fetchBuilds(true), 1000);
       } else {
-        setMessage({ 
-          text: data.message || 'Terjadi kesalahan', 
-          type: 'error' 
-        });
+        throw new Error(data.message || 'Gagal mengeksekusi aksi');
       }
     } catch (error) {
-      setMessage({ 
-        text: `Gagal: ${error.message}`, 
-        type: 'error' 
-      });
+      setMessage({ text: error.message, type: 'error' });
     } finally {
       setActionLoading(null);
     }
   };
 
-  const formatTime = (timestamp) => {
-    const date = new Date(timestamp);
-    return date.toLocaleString('id-ID', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  };
-
-  // Extract version from build name (e.g., "1.0.0", "v1.0.1", "release-1.2.3")
-  const extractVersion = (buildName) => {
-    if (!buildName) return null;
-    
-    // Match patterns like: 1.0.0, v1.0.1, release-1.2.3, etc
-    const versionMatch = buildName.match(/(\d+)\.(\d+)\.(\d+)/);
-    if (!versionMatch) return null;
-    
-    return {
-      full: versionMatch[0],
-      major: parseInt(versionMatch[1]),
-      minor: parseInt(versionMatch[2]),
-      patch: parseInt(versionMatch[3])
-    };
-  };
-
-  // Group builds by jobName and sort by version
-  const groupedBuilds = builds.reduce((acc, build) => {
-    const jobName = build.jobName;
-    if (!acc[jobName]) {
-      acc[jobName] = [];
-    }
-    acc[jobName].push(build);
-    return acc;
-  }, {});
-
-  // Sort builds within each group by version (newest first)
-  Object.keys(groupedBuilds).forEach(jobName => {
-    groupedBuilds[jobName].sort((a, b) => {
-      const versionA = extractVersion(a.name);
-      const versionB = extractVersion(b.name);
-      
-      // If no version found, sort by timestamp
-      if (!versionA && !versionB) return b.timestamp - a.timestamp;
-      if (!versionA) return 1;
-      if (!versionB) return -1;
-      
-      // Sort by semantic version (major.minor.patch) - descending
-      if (versionA.major !== versionB.major) return versionB.major - versionA.major;
-      if (versionA.minor !== versionB.minor) return versionB.minor - versionA.minor;
-      return versionB.patch - versionA.patch;
-    });
-  });
-
-  // Sort pipeline groups alphabetically
-  const sortedPipelineNames = Object.keys(groupedBuilds).sort();
-
   return (
-    <div className="min-h-screen bg-neutral-950 text-white p-6">
-      {/* Background Effects */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-[-10%] left-[-5%] w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-neutral-950 text-white p-4 md:p-8 font-sans selection:bg-indigo-500/30">
+      {/* Dynamic Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px]" />
+        <div className="absolute -bottom-[10%] -left-[5%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[120px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-indigo-600/20 rounded-lg border border-indigo-500/30">
-              <Activity size={24} className="text-indigo-400" />
+      <div className="max-w-6xl mx-auto relative z-10">
+        {/* Header Section */}
+        <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+          <div>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="p-2.5 bg-indigo-600/20 rounded-xl border border-indigo-500/30 shadow-lg shadow-indigo-500/10">
+                <Activity size={28} className="text-indigo-400" />
+              </div>
+              <h1 className="text-3xl font-extrabold tracking-tight">Jenkins Gateway</h1>
             </div>
-            <h1 className="text-3xl font-bold">Jenkins Approval Gateway</h1>
+            <p className="text-neutral-400 ml-1 dark:text-neutral-500">
+              Otorisasi deployment produksi secara real-time
+            </p>
           </div>
-          <p className="text-neutral-400 ml-12">Monitor dan kontrol pipeline deployment</p>
-        </div>
+          
+          <div className="flex items-center gap-3 text-xs font-mono text-neutral-500 bg-neutral-900/50 px-4 py-2 rounded-full border border-neutral-800">
+            <RefreshCw size={14} className={isRefreshing ? "animate-spin text-indigo-400" : ""} />
+            <span>AUTO-REFRESH: 10S</span>
+          </div>
+        </header>
 
-        {/* Message Alert */}
+        {/* Global Feedback Alert */}
         {message.text && (
-          <div className={`mb-6 p-4 rounded-lg border flex items-center gap-3 animate-in fade-in slide-in-from-top-2 ${
+          <div className={`mb-6 p-4 rounded-xl border flex items-center gap-3 animate-in slide-in-from-top-4 duration-300 ${
             message.type === 'success' 
-              ? 'bg-green-500/10 border-green-500/20 text-green-400' 
-              : 'bg-red-500/10 border-red-500/20 text-red-400'
+              ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400' 
+              : 'bg-rose-500/10 border-rose-500/20 text-rose-400'
           }`}>
             {message.type === 'success' ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
-            <span>{message.text}</span>
+            <span className="font-medium">{message.text}</span>
           </div>
         )}
 
-        {/* API Error */}
-        {apiError && !loading && (
-          <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-8 text-center mb-6">
-            <WifiOff size={48} className="mx-auto mb-4 text-red-400" />
-            <h3 className="text-xl font-semibold mb-2 text-red-400">API Endpoint Error</h3>
-            <p className="text-neutral-300 mb-4">Tidak dapat terhubung ke <code className="bg-neutral-900 px-2 py-1 rounded">/api/jenkins/pending</code></p>
-            <button
-              onClick={fetchBuilds}
-              className="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg transition-colors"
-            >
-              Coba Lagi
+        {/* State Management Views */}
+        {isLoading ? (
+          <div className="flex flex-col items-center justify-center py-32">
+            <Loader2 size={48} className="animate-spin text-indigo-500 mb-4" />
+            <p className="text-neutral-400 animate-pulse">Sinkronisasi dengan Jenkins...</p>
+          </div>
+        ) : apiError ? (
+          <div className="bg-neutral-900/50 border border-rose-500/20 rounded-2xl p-12 text-center backdrop-blur-sm">
+            <WifiOff size={56} className="mx-auto mb-4 text-rose-500/50" />
+            <h3 className="text-xl font-bold mb-2 text-rose-400">Connection Failure</h3>
+            <p className="text-neutral-400 max-w-md mx-auto mb-6">Gagal mengambil data dari endpoint Jenkins API. Pastikan VPN atau tunnel aktif.</p>
+            <button onClick={() => fetchBuilds()} className="px-6 py-2.5 bg-neutral-800 hover:bg-neutral-700 rounded-xl transition-all font-semibold">
+              Coba Hubungkan Kembali
             </button>
           </div>
-        )}
-
-        {/* Loading State */}
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
-            <Loader2 size={40} className="animate-spin mb-4" />
-            <p>Memuat data pipeline...</p>
+        ) : builds.length === 0 ? (
+          <div className="bg-neutral-900/30 border border-neutral-800 rounded-2xl p-16 text-center">
+            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
+              <CheckCircle size={40} className="text-emerald-500" />
+            </div>
+            <h3 className="text-2xl font-bold mb-2 text-neutral-200">Semua Beres!</h3>
+            <p className="text-neutral-500">Tidak ada pipeline yang menunggu persetujuan saat ini.</p>
           </div>
-        ) : !apiError && builds.length === 0 ? (
-          <div className="bg-neutral-900 border border-neutral-800 rounded-xl p-12 text-center">
-            <CheckCircle size={48} className="mx-auto mb-4 text-green-400" />
-            <h3 className="text-xl font-semibold mb-2">Tidak Ada Pipeline Menunggu</h3>
-            <p className="text-neutral-400">Semua deployment sudah diproses</p>
-          </div>
-        ) : !apiError && (
-          <div className="space-y-6">
-            {sortedPipelineNames.map((jobName) => (
-              <div key={jobName} className="bg-neutral-900 border border-neutral-800 rounded-xl p-6 hover:border-neutral-700 transition-all">
-                {/* Pipeline Header */}
-                <div className="flex items-center justify-between gap-3 mb-5 pb-4 border-b border-neutral-800">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-indigo-600/20 rounded-lg border border-indigo-500/30">
-                      <Package size={20} className="text-indigo-400" />
-                    </div>
-                    <div>
-                      <h2 className="text-lg font-bold text-white">{jobName}</h2>
-                      <p className="text-sm text-neutral-500">{groupedBuilds[jobName].length} version menunggu approval</p>
-                    </div>
+        ) : (
+          <div className="grid gap-8">
+            {memoizedGroups.sortedNames.map((jobName) => (
+              <section key={jobName} className="group">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="h-px flex-1 bg-neutral-800 group-hover:bg-indigo-500/20 transition-colors" />
+                  <div className="flex items-center gap-2 px-4 py-1.5 bg-neutral-900 rounded-lg border border-neutral-800 shadow-sm">
+                    <Package size={16} className="text-indigo-400" />
+                    <h2 className="text-sm font-bold tracking-widest uppercase text-neutral-300">{jobName}</h2>
+                    <span className="ml-2 px-2 py-0.5 bg-indigo-500/10 text-indigo-400 text-[10px] rounded-full border border-indigo-500/20">
+                      {memoizedGroups.groups[jobName].length}
+                    </span>
                   </div>
+                  <div className="h-px flex-1 bg-neutral-800 group-hover:bg-indigo-500/20 transition-colors" />
                 </div>
 
-                {/* Builds List - Vertical Stack */}
-                <div className="space-y-4">
-                  {groupedBuilds[jobName].map((build) => {
+                <div className="grid gap-4">
+                  {memoizedGroups.groups[jobName].map((build) => {
                     const version = extractVersion(build.name);
+                    const isProcessing = actionLoading?.startsWith(build.id);
                     
                     return (
-                      <div 
-                        key={`${build.jobName}-${build.id}`}
-                        className="bg-neutral-800/50 border border-neutral-700 rounded-lg p-4 hover:border-indigo-500/30 transition-all"
-                      >
-                        <div className="flex items-center justify-between gap-4 flex-wrap">
-                          {/* Build Info */}
-                          <div className="flex-1 min-w-[250px]">
-                            <div className="flex items-center gap-3 mb-2">
-                              <GitBranch size={18} className="text-indigo-400" />
-                              <span className="text-base font-semibold text-white">
-                                {version ? `Version ${version.full}` : `Build #${build.id}`}
-                              </span>
-                              <span className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 rounded text-xs font-semibold border border-yellow-500/30">
-                                PENDING
-                              </span>
+                      <div key={build.id} className="relative overflow-hidden bg-neutral-900/40 border border-neutral-800/60 rounded-2xl p-5 hover:bg-neutral-900/60 hover:border-neutral-700 transition-all duration-300 group/card">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                          {/* Left: Build Info */}
+                          <div className="flex items-start gap-4">
+                            <div className="mt-1 p-2 bg-neutral-800 rounded-lg group-hover/card:bg-indigo-500/10 transition-colors">
+                              <GitBranch size={20} className="text-neutral-500 group-hover/card:text-indigo-400" />
                             </div>
-                            
-                            <div className="flex items-center gap-2 text-sm text-neutral-400 ml-7">
-                              <Clock size={14} />
-                              <span>{formatTime(build.timestamp)}</span>
+                            <div>
+                              <div className="flex items-center gap-3 mb-1">
+                                <span className="text-lg font-bold text-neutral-100 leading-none">
+                                  {version ? `v${version.full}` : `Build #${build.id}`}
+                                </span>
+                                <span className="flex items-center gap-1.5 px-2 py-0.5 bg-amber-500/10 text-amber-500 rounded text-[10px] font-bold border border-amber-500/20 uppercase tracking-tighter">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                  Waiting
+                                </span>
+                              </div>
+                              <div className="flex items-center gap-2 text-xs text-neutral-500">
+                                <Clock size={12} />
+                                <span>{new Date(build.timestamp).toLocaleString('id-ID')}</span>
+                                <span className="text-neutral-700">•</span>
+                                <span className="font-mono uppercase tracking-tight">ID: {build.id}</span>
+                              </div>
                             </div>
                           </div>
 
-                          {/* Action Buttons */}
-                          <div className="flex gap-3">
+                          {/* Right: Actions */}
+                          <div className="flex items-center gap-3">
                             <button
                               onClick={() => handleAction(build.id, build.jobName, 'approve')}
-                              disabled={actionLoading !== null}
-                              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-semibold rounded-lg shadow-lg shadow-green-500/20 transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={!!actionLoading}
+                              className="relative flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 bg-emerald-600 hover:bg-emerald-500 disabled:bg-neutral-800 disabled:text-neutral-600 text-white font-bold rounded-xl transition-all active:scale-95 shadow-lg shadow-emerald-900/20 overflow-hidden"
                             >
                               {actionLoading === `${build.id}-approve` ? (
-                                <>
-                                  <Loader2 size={18} className="animate-spin" />
-                                  <span>Processing...</span>
-                                </>
+                                <Loader2 size={18} className="animate-spin" />
                               ) : (
-                                <>
-                                  <CheckCircle size={18} />
-                                  <span>Deploy</span>
-                                </>
+                                <><CheckCircle size={18} /> Deploy</>
                               )}
                             </button>
 
                             <button
                               onClick={() => handleAction(build.id, build.jobName, 'abort')}
-                              disabled={actionLoading !== null}
-                              className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-semibold rounded-lg shadow-lg shadow-red-500/20 transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                              disabled={!!actionLoading}
+                              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-3 bg-neutral-800 hover:bg-rose-900/30 hover:text-rose-400 disabled:opacity-50 text-neutral-400 font-semibold rounded-xl transition-all border border-neutral-700"
                             >
                               {actionLoading === `${build.id}-abort` ? (
-                                <>
-                                  <Loader2 size={18} className="animate-spin" />
-                                  <span>Processing...</span>
-                                </>
+                                <Loader2 size={18} className="animate-spin" />
                               ) : (
-                                <>
-                                  <XCircle size={18} />
-                                  <span>Abort</span>
-                                </>
+                                <><XCircle size={16} /> Abort</>
                               )}
                             </button>
                           </div>
@@ -299,15 +268,16 @@ export default function JenkinsDashboard() {
                     );
                   })}
                 </div>
-              </div>
+              </section>
             ))}
           </div>
         )}
 
-        {/* Footer */}
-        <div className="mt-8 text-center text-xs text-neutral-600">
-          <p>Auto-refresh setiap 10 detik • Production Gateway System</p>
-        </div>
+        <footer className="mt-16 pt-8 border-t border-neutral-900 text-center">
+          <p className="text-[10px] text-neutral-600 uppercase tracking-[0.2em]">
+            Production Environment • Jenkins CI/CD Orchestrator
+          </p>
+        </footer>
       </div>
     </div>
   );

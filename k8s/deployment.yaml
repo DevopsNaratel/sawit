@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: naratel-dashboard
+  namespace: default
+  labels:
+    app: naratel-dashboard
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: naratel-dashboard
+  template:
+    metadata:
+      labels:
+        app: naratel-dashboard
+    spec:
+      containers:
+        - name: naratel-dashboard
+          # Replace with your actual registry image path
+          # e.g., ghcr.io/your-org/naratel-dashboard:latest
+          image: naratel-dashboard:latest 
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: PORT
+              value: "3000"
+            - name: HOSTNAME
+              value: "0.0.0.0"
+            # Add other environment variables here or refer to a ConfigMap/Secret
+            # - name: DATABASE_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: my-app-secrets
+            #       key: database-url
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /api/auth/session # Or a dedicated health endpoint
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 20
