@@ -3,16 +3,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-// Loader2 dan useSession dihapus karena tidak lagi digunakan untuk proteksi
 import Navigation from './components/Navigation';
 import JenkinsDashboard from './components/JenkinsDashboard';
 
 export default function DashboardPage() {
   const router = useRouter();
 
-  // Logika redirect dan loading dihapus agar halaman langsung terbuka
-
-  // Handler untuk navigation tetap dipertahankan agar menu berfungsi
   const handlePageChange = (page) => {
     if (page === 'jenkins') {
       router.push('/');
@@ -23,9 +19,10 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-neutral-950">
-      {/* Langsung menampilkan konten tanpa pengecekan session */}
       <Navigation activePage="jenkins" onPageChange={handlePageChange} />
-      <main>
+      
+      {/* Main content dengan margin kiri untuk desktop */}
+      <main className="md:ml-64">
         <JenkinsDashboard />
       </main>
     </div>
