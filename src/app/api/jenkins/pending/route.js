@@ -13,8 +13,9 @@ export async function GET() {
   const auth = Buffer.from(`${JENKINS_USER}:${JENKINS_API_TOKEN}`).toString('base64');
 
   try {
-    // 1. Fetch daftar semua jobs dari Jenkins secara otomatis
-    const jobsResponse = await fetch(`${JENKINS_URL}/api/json`, {
+    // 1. Fetch daftar semua jobs dari Jenkins (Optimized dengan tree)
+    // Kita hanya mengambil job yang sedang building/running untuk mengurangi request ke API
+    const jobsResponse = await fetch(`${JENKINS_URL}/api/json?tree=jobs[name,url,color,lastBuild[building]]`, {
       headers: { 'Authorization': `Basic ${auth}` },
       cache: 'no-store'
     });
@@ -24,19 +25,35 @@ export async function GET() {
     }
 
     const jenkinsData = await jobsResponse.json();
-    const jobs = jenkinsData.jobs || [];
+    const allJobs = jenkinsData.jobs || [];
 
-    if (jobs.length === 0) {
+    if (allJobs.length === 0) {
       return NextResponse.json({ message: 'Tidak ada job ditemukan di Jenkins' });
     }
 
-    // 2. Extract nama job dari setiap item
-    const jobNames = jobs.map(job => job.name);
+    // 2. Filter hanya job yang sedang aktif (Running/Building)
+    const activeJobs = allJobs.filter(job => {
+      // Cek apakah lastBuild sedang building atau color punya animasi (indikator running)
+      const isBuilding = job.lastBuild?.building === true;
+      const isAnime = job.color?.toString().endsWith('_anime');
+      return isBuilding || isAnime;
+    });
 
-    console.log('Total jobs ditemukan:', jobNames.length);
-    console.log('Jobs:', jobNames);
+    // Extract nama job dari active jobs
+    const jobNames = activeJobs.map(job => job.name);
 
-    // 3. Fetch data dari SEMUA job secara Paralel (Promise.all)
+    console.log(`Optimization: Processing ${jobNames.length} active jobs out of ${allJobs.length} total jobs.`);
+    
+    if (jobNames.length === 0) {
+      return NextResponse.json({
+        totalJobs: allJobs.length,
+        activeJobs: 0,
+        pendingBuilds: 0,
+        data: []
+      });
+    }
+
+    // 3. Fetch data dari ACTIVE job secara Paralel (Promise.all)
     const promises = jobNames.map(async (jobName) => {
       try {
         const res = await fetch(`${JENKINS_URL}/job/${jobName}/wfapi/runs`, {
@@ -89,7 +106,8 @@ export async function GET() {
     console.log('Total pending builds:', allPendingBuilds.length);
 
     return NextResponse.json({
-      totalJobs: jobNames.length,
+      totalJobs: allJobs.length,
+      activeJobs: jobNames.length,
       pendingBuilds: allPendingBuilds.length,
       data: allPendingBuilds
     });

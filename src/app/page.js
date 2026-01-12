@@ -18,11 +18,11 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950">
+    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 transition-colors">
       <Navigation activePage="jenkins" onPageChange={handlePageChange} />
       
       {/* Main content dengan margin kiri untuk desktop */}
-      <main className="md:ml-64">
+      <main className="md:ml-56">
         <JenkinsDashboard />
       </main>
     </div>
