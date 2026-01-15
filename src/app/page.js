@@ -9,13 +9,15 @@ import JenkinsDashboard from './components/JenkinsDashboard';
 export default function DashboardPage() {
   const router = useRouter();
 
-  const handlePageChange = (page) => {
-    if (page === 'jenkins') {
-      router.push('/');
-    } else if (page === 'k8s-secret') {
-      router.push('/secrets');
-    }
-  };
+const handlePageChange = (page) => {
+  if (page === 'jenkins') {
+    router.push('/');
+  } else if (page === 'k8s-secret') {
+    router.push('/secrets');
+  } else if (page === 'manifest') { // TAMBAHKAN INI
+    router.push('/manifest');
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 transition-colors">

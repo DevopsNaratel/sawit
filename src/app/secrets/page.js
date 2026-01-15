@@ -17,13 +17,15 @@ export default function K8sSecretManager() {
   const [namespaces, setNamespaces] = useState([]);
   const [loadingNamespaces, setLoadingNamespaces] = useState(true);
 
-  const handlePageChange = (page) => {
-    if (page === 'jenkins') {
-      router.push('/');
-    } else if (page === 'k8s-secret') {
-      router.push('/secrets');
-    }
-  };
+const handlePageChange = (page) => {
+  if (page === 'jenkins') {
+    router.push('/');
+  } else if (page === 'k8s-secret') {
+    router.push('/secrets');
+  } else if (page === 'manifest') { // TAMBAHKAN INI
+    router.push('/manifest');
+  }
+};
 
   // Form state
   const [isDualEnv, setIsDualEnv] = useState(false);

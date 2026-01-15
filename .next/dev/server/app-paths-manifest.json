@@ -3,6 +3,8 @@
   "/api/jenkins/pending/route": "app/api/jenkins/pending/route.js",
   "/api/k8s/namespaces/route": "app/api/k8s/namespaces/route.js",
   "/api/k8s/secret/route": "app/api/k8s/secret/route.js",
+  "/api/manifest/next-id/route": "app/api/manifest/next-id/route.js",
+  "/manifest/page": "app/manifest/page.js",
   "/page": "app/page.js",
   "/secrets/page": "app/secrets/page.js"
 }

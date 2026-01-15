@@ -1,13 +1,132 @@
-[00:00:01.529] Server  LOG      ✓ Ready in 848ms
-[00:00:24.951] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:25.887] Server  LOG     Optimization: Processing 0 active jobs out of 5 total jobs.
-[00:00:25.915] Browser WARN    Image with src "/Logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
-[00:00:30.210] Server  ERROR   (node:22794) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+[00:00:00.873] Server  LOG      ✓ Ready in 546ms
+[00:00:04.873] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:05.496] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:00:07.976] Server  ERROR    ⨯ ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+
+
+[00:00:08.089] Browser ERROR   ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+[00:00:08.678] Browser ERROR   ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+[00:00:08.678] Browser ERROR   ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+[00:00:08.928] Browser ERROR   ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+[00:00:08.948] Server  ERROR    ⨯ ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+
+
+[00:00:09.134] Browser ERROR   uncaughtError: Error: ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+
+
+[00:00:09.289] Browser ERROR   ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+[00:00:09.289] Browser ERROR   ./src/app/manifest/page.js:565:2
+Parsing ecmascript source code failed
+  563 |     </div>
+  564 |   );
+> 565 | }
+      |  ^
+  566 |
+
+Expected '}', got '<eof>'
+[00:01:08.663] Server  LOG      ✓ Compiled in 162ms
+[00:01:09.062] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:06.922] Browser ERROR   uncaughtError: TypeError: onPageChange is not a function
+[00:04:08.478] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:04:08.769] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:04:14.501] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:04:14.513] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:08:07.431] Server  LOG      ✓ Compiled in 66ms
+[00:09:56.853] Server  LOG      ✓ Compiled in 62ms
+[00:10:20.574] Browser ERROR   uncaughtError: TypeError: onPageChange is not a function
+[00:10:21.899] Browser ERROR   uncaughtError: TypeError: onPageChange is not a function
+[00:10:24.249] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:10:27.715] Browser ERROR   uncaughtError: TypeError: onPageChange is not a function
+[00:10:29.295] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:10:29.384] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:11:10.807] Browser ERROR   uncaughtError: TypeError: Illegal constructor.
+[00:11:23.652] Server  ERROR    ⨯ ReferenceError: Navigation is not defined
+[00:11:23.793] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:11:23.924] Browser ERROR   uncaughtError: TypeError: Illegal constructor.
+[00:11:25.601] Server  ERROR    ⨯ ReferenceError: Navigation is not defined
+[00:11:25.769] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:11:25.895] Browser ERROR   uncaughtError: TypeError: Illegal constructor.
+[00:12:00.150] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:12:15.553] Server  ERROR   (node:7409) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
 (Use `node-22 --trace-warnings ...` to show where the warning was created)
-[00:00:33.063] Server  LOG      ○ Compiling /api/k8s/namespaces ...
-[00:00:45.195] Server  LOG     Optimization: Processing 0 active jobs out of 5 total jobs.
-[00:00:45.293] Server  LOG     Optimization: Processing 0 active jobs out of 5 total jobs.
-[00:00:48.332] Server  LOG     Optimization: Processing 0 active jobs out of 5 total jobs.
-[00:00:48.619] Server  LOG     Optimization: Processing 0 active jobs out of 5 total jobs.
-[00:09:15.812] Server  LOG     Optimization: Processing 0 active jobs out of 5 total jobs.
-[00:09:16.015] Server  LOG     Optimization: Processing 0 active jobs out of 5 total jobs.
+[00:12:18.448] Server  LOG      ○ Compiling /api/k8s/namespaces ...
+[00:12:42.277] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:12:42.364] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:12:47.738] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:12:47.792] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:17:35.579] Server  LOG      ✓ Compiled in 59ms
+[00:17:35.629] Server  LOG      ✓ Compiled in 33ms
+[00:31:47.006] Server  LOG      ✓ Compiled in 32ms
+[00:32:08.784] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:37:48.016] Server  LOG      ✓ Compiled in 28ms
+[00:37:55.801] Server  LOG      ✓ Compiled in 27ms
+[00:38:02.768] Server  LOG      ✓ Compiled in 28ms
+[00:38:13.018] Server  LOG      ✓ Compiled in 43ms
+[00:38:20.332] Server  LOG      ✓ Compiled in 35ms
+[00:38:31.041] Server  LOG      ✓ Compiled in 25ms
+[00:38:46.931] Server  LOG      ✓ Compiled in 76ms
+[00:39:03.393] Server  LOG      ✓ Compiled in 36ms
