@@ -1,27 +1,18 @@
 {
   "app": {
-    "[project]/src/app/_not-found/page": [
+    "[project]/Naratel-Devops-Dashboard/src/app/login/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
-<<<<<<< HEAD
-=======
-    "[project]/src/app/login/page": [
+    "[project]/Naratel-Devops-Dashboard/src/app/manifest/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
->>>>>>> 9b9e391 (add login & tools page)
-    "[project]/src/app/manifest/page": [
+    "[project]/Naratel-Devops-Dashboard/src/app/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
-    "[project]/src/app/page": [
+    "[project]/Naratel-Devops-Dashboard/src/app/secrets/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ],
-    "[project]/src/app/profile/page": [
-      "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
-    ],
-    "[project]/src/app/secrets/page": [
-      "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
-    ],
-    "[project]/src/app/tools/page": [
+    "[project]/Naratel-Devops-Dashboard/src/app/tools/page": [
       "static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2"
     ]
   },

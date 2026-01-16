@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Lock, User, Terminal, Loader2 } from 'lucide-react';
+import Image from "next/image";
+import Logo from '@/assets/Logo.png';
 
 
 const quotes = [
@@ -60,15 +62,18 @@ export default function LoginPage() {
         <div className="min-h-screen w-full flex bg-white dark:bg-neutral-950 text-neutral-900 dark:text-neutral-200 font-sans selection:bg-[#FFA500]/30">
 
             {/* Left Side - Minimalist Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-24 bg-white dark:bg-neutral-950">
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-24 bg-white dark:bg-neutral-900">
                 <div className="w-full max-w-sm space-y-8">
 
                     <div className="space-y-2">
-                        <div className="mb-6">
-                            <img
-                                src="/Logo.png"
+                        <div className="mb-6 h-16 w-auto relative">
+                            <Image
+                                src={Logo}
                                 alt="Naratel Logo"
-                                className="h-16 w-auto"
+                                className="object-contain object-left"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 33vw"
+                                priority
                             />
                         </div>
                         <h1 className="text-2xl font-bold tracking-tight text-neutral-900 dark:text-white">
@@ -89,7 +94,7 @@ export default function LoginPage() {
                                     required
                                     value={data.username}
                                     onChange={(e) => setData({ ...data, username: e.target.value })}
-                                    className="block w-full pl-10 pr-3 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm placeholder:text-neutral-400 focus:border-[#FFA500] dark:focus:border-[#FFA500] focus:outline-none focus:ring-1 focus:ring-[#FFA500] transition-all"
+                                    className="block w-full pl-10 pr-3 py-2.5 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm placeholder:text-neutral-400 focus:border-[#FFA500] dark:focus:border-[#FFA500] focus:outline-none focus:ring-1 focus:ring-[#FFA500] transition-all"
                                     placeholder="admin"
                                 />
                             </div>
@@ -104,7 +109,7 @@ export default function LoginPage() {
                                     required
                                     value={data.password}
                                     onChange={(e) => setData({ ...data, password: e.target.value })}
-                                    className="block w-full pl-10 pr-3 py-2.5 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm placeholder:text-neutral-400 focus:border-[#FFA500] dark:focus:border-[#FFA500] focus:outline-none focus:ring-1 focus:ring-[#FFA500] transition-all"
+                                    className="block w-full pl-10 pr-3 py-2.5 bg-neutral-50 dark:bg-neutral-950 border border-neutral-200 dark:border-neutral-800 rounded-lg text-sm placeholder:text-neutral-400 focus:border-[#FFA500] dark:focus:border-[#FFA500] focus:outline-none focus:ring-1 focus:ring-[#FFA500] transition-all"
                                     placeholder="••••••••"
                                 />
                             </div>
