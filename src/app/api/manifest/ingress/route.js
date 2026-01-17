@@ -137,6 +137,21 @@ export async function POST(req) {
             updateIngressConfig(prodPath, config, false, appName);
             updateIngressConfig(testPath, config, true, appName);
 
+            // Update Registry to sync ingressHost
+            const registryPath = path.join(repoPath, 'registry.json');
+            if (fs.existsSync(registryPath)) {
+                try {
+                    let registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+                    const idx = registry.findIndex(r => r.name === appName);
+                    if (idx >= 0) {
+                        registry[idx].ingressHost = enabled ? host : null;
+                        fs.writeFileSync(registryPath, JSON.stringify(registry, null, 2));
+                    }
+                } catch (regErr) {
+                    console.error("Registry sync failed:", regErr.message);
+                }
+            }
+
             execSync(`git add .`, { cwd: repoPath });
             const status = execSync(`git status --porcelain`, { cwd: repoPath }).toString();
             

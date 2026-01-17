@@ -383,6 +383,7 @@ backup:
                   name: data.appName,
                   image: `${safeImageRepo}:${data.imageTag}`,
                   db: data.dbType,
+                  ingressHost: data.ingressEnabled ? data.ingressHost : null,
                   createdAt: new Date().toISOString()
               };
               if (existingIdx >= 0) {

@@ -8,7 +8,9 @@
   "/api/manifest/ingress/route": "app/api/manifest/ingress/route.js",
   "/api/manifest/next-id/route": "app/api/manifest/next-id/route.js",
   "/api/manifest/secrets/route": "app/api/manifest/secrets/route.js",
+  "/login/page": "app/login/page.js",
   "/manifest/page": "app/manifest/page.js",
   "/page": "app/page.js",
-  "/secrets/page": "app/secrets/page.js"
+  "/secrets/page": "app/secrets/page.js",
+  "/tools/page": "app/tools/page.js"
 }

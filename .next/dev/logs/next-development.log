@@ -83,3 +83,15 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
 [01:27:55.826] Server  LOG     [DEBUG] Final dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
 [01:27:55.826] Server  LOG     [DEBUG] Generating ngetesttt-db-testing (testing):
 [01:27:55.826] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[01:56:50.134] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:56:54.908] Server  LOG      ✓ Compiled in 106ms
+[01:57:25.311] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[01:58:44.846] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[01:58:44.921] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[01:58:59.920] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[01:59:00.102] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:05:22.690] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:05:22.880] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:05:44.862] Server  LOG      ✓ Compiled in 81ms
+[02:10:41.399] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:10:48.840] Server  LOG      ✓ Compiled in 28ms

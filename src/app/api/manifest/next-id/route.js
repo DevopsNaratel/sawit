@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import yaml from 'js-yaml';
 import { gitMutex } from '@/lib/gitMutex';
 
 export const dynamic = 'force-dynamic';
@@ -45,9 +46,44 @@ export async function GET() {
             registry = JSON.parse(content);
         }
 
-        // 3. Cari ID Maksimal
+        // 3. Enrich Registry with Real Ingress Data
+        const enrichedRegistry = registry.map(app => {
+            const prodValuesPath = path.join(repoPath, 'apps', `${app.name}-prod`, 'values.yaml');
+            const testValuesPath = path.join(repoPath, 'apps', `${app.name}-testing`, 'values.yaml');
+            
+            let prodHost = null;
+            let testHost = null;
+
+            // Read Prod
+            if (fs.existsSync(prodValuesPath)) {
+                try {
+                    const doc = yaml.load(fs.readFileSync(prodValuesPath, 'utf8'));
+                    if (doc.ingress && doc.ingress.enabled && doc.ingress.hosts && doc.ingress.hosts.length > 0) {
+                        prodHost = doc.ingress.hosts[0].host;
+                    }
+                } catch (e) { console.warn(`Failed to read prod values for ${app.name}`, e); }
+            }
+
+            // Read Testing
+            if (fs.existsSync(testValuesPath)) {
+                try {
+                    const doc = yaml.load(fs.readFileSync(testValuesPath, 'utf8'));
+                    if (doc.ingress && doc.ingress.enabled && doc.ingress.hosts && doc.ingress.hosts.length > 0) {
+                        testHost = doc.ingress.hosts[0].host;
+                    }
+                } catch (e) { console.warn(`Failed to read test values for ${app.name}`, e); }
+            }
+
+            return {
+                ...app,
+                liveIngressProd: prodHost,
+                liveIngressTest: testHost
+            };
+        });
+
+        // 4. Cari ID Maksimal
         let maxId = 0;
-        registry.forEach(app => {
+        enrichedRegistry.forEach(app => {
             const idNum = parseInt(app.id);
             if (!isNaN(idNum) && idNum > maxId) {
                 maxId = idNum;
@@ -55,7 +91,7 @@ export async function GET() {
         });
 
         const nextId = String(maxId + 1).padStart(3, '0');
-        return NextResponse.json({ nextId, registry });
+        return NextResponse.json({ nextId, registry: enrichedRegistry });
 
       } catch (error) {
         console.error("Error in next-id:", error);
