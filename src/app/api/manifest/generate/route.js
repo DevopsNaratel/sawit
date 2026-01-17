@@ -78,10 +78,24 @@ export async function POST(req) {
             const dbPort = data.dbType === 'postgres' ? "5432" : "3306";
             const dbName = data.appName.replace(/-/g, '_'); 
             
-            if (!appSecretObj["DB_HOST"]) appSecretObj["DB_HOST"] = `svc-${data.appName}-db-${data.appId}`;
-            if (!appSecretObj["DB_PORT"]) appSecretObj["DB_PORT"] = dbPort;
-            if (!appSecretObj["DB_NAME"]) appSecretObj["DB_NAME"] = dbName;
-            if (!appSecretObj["DB_USER"]) appSecretObj["DB_USER"] = "admin";
+            // FORCE overwrite DB_HOST and DB_PORT to match the Service we are generating
+            appSecretObj["DB_HOST"] = `svc-${data.appName}-db-${data.appId}`;
+            appSecretObj["DB_PORT"] = dbPort;
+            
+            // --- Standardize Keys (Map DB_USER -> DB_USERNAME, etc.) ---
+            if (appSecretObj["DB_NAME"] && !appSecretObj["DB_DATABASE"]) {
+                appSecretObj["DB_DATABASE"] = appSecretObj["DB_NAME"];
+            }
+            if (appSecretObj["DB_USER"] && !appSecretObj["DB_USERNAME"]) {
+                appSecretObj["DB_USERNAME"] = appSecretObj["DB_USER"];
+            }
+            if (appSecretObj["DB_PASS"] && !appSecretObj["DB_PASSWORD"]) {
+                appSecretObj["DB_PASSWORD"] = appSecretObj["DB_PASS"];
+            }
+
+            // --- Fill Defaults if still missing ---
+            if (!appSecretObj["DB_DATABASE"]) appSecretObj["DB_DATABASE"] = dbName;
+            if (!appSecretObj["DB_USERNAME"]) appSecretObj["DB_USERNAME"] = "admin";
             if (!appSecretObj["DB_PASSWORD"]) appSecretObj["DB_PASSWORD"] = "changeme_securely";
         }
 
@@ -98,16 +112,47 @@ export async function POST(req) {
         
         if (data.dbType !== 'none') {
              const dbName = data.appName.replace(/-/g, '_'); 
+             
+             console.log("[DEBUG] Mapping DB Secrets for type:", data.dbType);
+             console.log("[DEBUG] Initial dbSecretObj:", JSON.stringify(dbSecretObj, null, 2));
+
              if (data.dbType === 'postgres') {
-                if (!dbSecretObj["POSTGRES_DB"]) dbSecretObj["POSTGRES_DB"] = dbName;
-                if (!dbSecretObj["POSTGRES_USER"]) dbSecretObj["POSTGRES_USER"] = "admin";
-                if (!dbSecretObj["POSTGRES_PASSWORD"]) dbSecretObj["POSTGRES_PASSWORD"] = "changeme_securely";
+                // FORCE: Gunakan Key standar PostgreSQL (POSTGRES_*)
+                // Prioritaskan input dari dbSecretObj (Form DB Secrets), fallback ke appSecretObj (Form App Secrets)
+                
+                const userDbName = dbSecretObj["DB_NAME"] || appSecretObj["DB_NAME"] || dbName;
+                const userDbUser = dbSecretObj["DB_USER"] || appSecretObj["DB_USER"] || "admin";
+                const userDbPass = dbSecretObj["DB_PASS"] || appSecretObj["DB_PASS"] || "changeme_securely";
+
+                dbSecretObj["POSTGRES_DB"] = userDbName;
+                dbSecretObj["POSTGRES_USER"] = userDbUser;
+                dbSecretObj["POSTGRES_PASSWORD"] = userDbPass;
+                
+                // Cleanup non-standard keys from dbSecretObj
+                delete dbSecretObj["DB_NAME"];
+                delete dbSecretObj["DB_USER"];
+                delete dbSecretObj["DB_PASS"];
+                delete dbSecretObj["DB_USERNAME"];
+                delete dbSecretObj["DB_PASSWORD"];
+                delete dbSecretObj["DB_DATABASE"];
+                
              } else {
-                if (!dbSecretObj["MYSQL_DATABASE"]) dbSecretObj["MYSQL_DATABASE"] = dbName;
-                if (!dbSecretObj["MYSQL_USER"]) dbSecretObj["MYSQL_USER"] = "admin";
-                if (!dbSecretObj["MYSQL_PASSWORD"]) dbSecretObj["MYSQL_PASSWORD"] = "changeme_securely";
-                if (!dbSecretObj["MYSQL_ROOT_PASSWORD"]) dbSecretObj["MYSQL_ROOT_PASSWORD"] = "changeme_root";
+                // FORCE: Gunakan Key standar MySQL (MYSQL_*)
+                const userDbName = dbSecretObj["DB_NAME"] || appSecretObj["DB_NAME"] || dbName;
+                const userDbUser = dbSecretObj["DB_USER"] || appSecretObj["DB_USER"] || "admin";
+                const userDbPass = dbSecretObj["DB_PASS"] || appSecretObj["DB_PASS"] || "changeme_securely";
+
+                dbSecretObj["MYSQL_DATABASE"] = userDbName;
+                dbSecretObj["MYSQL_USER"] = userDbUser;
+                dbSecretObj["MYSQL_PASSWORD"] = userDbPass;
+                dbSecretObj["MYSQL_ROOT_PASSWORD"] = "changeme_root";
+                
+                // Cleanup
+                delete dbSecretObj["DB_NAME"];
+                delete dbSecretObj["DB_USER"];
+                delete dbSecretObj["DB_PASS"];
              }
+             console.log("[DEBUG] Final dbSecretObj:", JSON.stringify(dbSecretObj, null, 2));
         }
 
         const formatSecrets = (obj) => {
@@ -192,6 +237,14 @@ service:
   targetPort: ${data.targetPort}
 `.trim();
 
+            if (data.dbType !== 'none') {
+                values += `
+
+backup:
+  enabled: true
+  type: "${data.dbType}"`;
+            }
+
             if (data.ingressEnabled) {
                 values += `
 
@@ -258,10 +311,14 @@ image:
 service:
   port: ${dbPort}
   targetPort: ${dbPort}
+
+backup:
+  enabled: true
+  type: "${data.dbType}"
 `.trim();
         }
 
-        return { values, secrets };
+        return { values, secrets, appSecretObj, dbSecretObj };
       };
 
 
@@ -277,8 +334,16 @@ service:
               fs.mkdirSync(targetFolder, { recursive: true });
           }
 
-          const { values, secrets } = generateYaml(type, env);
+          const { values, secrets, appSecretObj, dbSecretObj } = generateYaml(type, env);
           
+          // DEBUG: Log the secrets being generated to verify values (Keys only for safety)
+          console.log(`[DEBUG] Generating ${folderName} (${env}):`);
+          if (type.startsWith('app')) {
+             console.log("App Secret Keys:", Object.keys(appSecretObj));
+          } else {
+             console.log("DB Secret Keys:", Object.keys(dbSecretObj));
+          }
+
           // 1. Write Plaintext Values
           fs.writeFileSync(valuesPath, values);
 

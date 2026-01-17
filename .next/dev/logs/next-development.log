@@ -1,5 +1,5 @@
-[00:00:01.076] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:00:01.079] Server  ERROR    ⨯ The file "./src/middleware.js" must export a function, either as a default export or as a named "middleware" export.
+[00:00:00.971] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:00.974] Server  ERROR    ⨯ The file "./src/middleware.js" must export a function, either as a default export or as a named "middleware" export.
 This function is what Next.js runs for every request handled by this middleware.
 
 Why this happens:
@@ -11,44 +11,75 @@ To fix it:
 - Ensure this file has either a default or "middleware" function export.
 
 Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
-[00:00:01.197] Server  LOG      ✓ Ready in 873ms
-[00:00:04.167] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:00:51.818] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
-[00:00:52.718] Server  ERROR   ReferenceError: appTargetPort is not defined
-[00:04:20.050] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
-[00:04:20.798] Server  LOG     Folder todoapp-prod exists, updating...
-[00:04:20.824] Server  LOG     Folder todoapp-testing exists, updating...
-[00:06:15.979] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:06:16.029] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:06:17.600] Server  ERROR   (node:14383) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
-(Use `node-22 --trace-warnings ...` to show where the warning was created)
-[00:06:20.503] Server  LOG      ○ Compiling /api/k8s/namespaces ...
-[00:06:42.294] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:06:52.843] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:06:52.947] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:07:07.795] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:07:08.013] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:08:51.878] Server  LOG      ✓ Compiled in 57ms
-[00:09:38.907] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:15:14.056] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
-[00:24:20.782] Server  LOG      ✓ Compiled in 36ms
-[00:27:28.825] Server  LOG      ✓ Compiled in 27ms
-[00:31:35.738] Server  WARN     ⚠ Cross origin request detected from 192.168.89.127 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[00:00:01.076] Server  LOG      ✓ Ready in 769ms
+[00:00:05.188] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:38.260] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:35.271] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
+[00:01:35.951] Server  LOG     Folder todoapp-prod exists, updating...
+[00:01:35.952] Server  LOG     [DEBUG] Generating todoapp-prod (prod):
+[00:01:35.954] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:01:35.981] Server  LOG     [DEBUG] Generating todoapp-testing (testing):
+[00:01:35.982] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:01:36.008] Server  LOG     [DEBUG] Generating todoapp-db-prod (prod):
+[00:01:36.008] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[00:01:36.033] Server  LOG     [DEBUG] Generating todoapp-db-testing (testing):
+[00:01:36.034] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[00:05:06.164] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:52.302] Server  WARN     ⚠ Cross origin request detected from 192.168.89.127 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
 Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
-[00:31:35.753] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:31:36.225] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:37:58.295] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[00:38:27.090] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:38:27.271] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[00:40:26.236] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[01:13:35.375] Browser ERROR   Received NaN for the `%s` attribute. If this is expected, cast the value to a string. value
-[01:14:29.940] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
-[01:15:13.992] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[01:15:14.133] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
-[01:24:30.010] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[01:24:31.076] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[01:26:42.542] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
-[01:26:51.435] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:45:23.627] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
-[02:50:38.044] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
-[02:50:47.386] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:52.323] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:05:57.545] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:06:49.633] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:08:52.125] Server  ERROR   (node:64138) Warning: Setting the NODE_TLS_REJECT_UNAUTHORIZED environment variable to '0' makes TLS connections and HTTPS requests insecure by disabling certificate verification.
+(Use `node-22 --trace-warnings ...` to show where the warning was created)
+[00:09:16.134] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:09:16.996] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[00:13:54.651] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
+[00:13:55.480] Server  LOG     [DEBUG] Generating todoapp-prod (prod):
+[00:13:55.481] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:13:55.518] Server  LOG     [DEBUG] Generating todoapp-testing (testing):
+[00:13:55.518] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:13:55.556] Server  LOG     [DEBUG] Generating todoapp-db-prod (prod):
+[00:13:55.556] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[00:13:55.590] Server  LOG     [DEBUG] Generating todoapp-db-testing (testing):
+[00:13:55.590] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[00:39:49.705] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
+[00:39:50.548] Server  LOG     [DEBUG] Generating ngetest-prod (prod):
+[00:39:50.549] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:39:50.586] Server  LOG     [DEBUG] Generating ngetest-testing (testing):
+[00:39:50.587] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:39:50.622] Server  LOG     [DEBUG] Generating ngetest-db-prod (prod):
+[00:39:50.623] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[00:39:50.658] Server  LOG     [DEBUG] Generating ngetest-db-testing (testing):
+[00:39:50.659] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[00:57:35.965] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
+[00:57:36.705] Server  LOG     [DEBUG] Generating ngetest-prod (prod):
+[00:57:36.705] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:57:36.743] Server  LOG     [DEBUG] Generating ngetest-testing (testing):
+[00:57:36.743] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[00:57:36.781] Server  LOG     [DEBUG] Generating ngetest-db-prod (prod):
+[00:57:36.782] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[00:57:36.818] Server  LOG     [DEBUG] Generating ngetest-db-testing (testing):
+[00:57:36.818] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[01:13:27.605] Server  LOG      ✓ Compiled in 115ms
+[01:27:54.844] Server  LOG     Updating repository at /tmp/manifest-repo-workdir...
+[01:27:55.713] Server  LOG     [DEBUG] Mapping DB Secrets for type: "postgres"
+[01:27:55.713] Server  LOG     [DEBUG] Initial dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.713] Server  LOG     [DEBUG] Final dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.713] Server  LOG     [DEBUG] Generating ngetesttt-prod (prod):
+[01:27:55.714] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[01:27:55.752] Server  LOG     [DEBUG] Mapping DB Secrets for type: "postgres"
+[01:27:55.752] Server  LOG     [DEBUG] Initial dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.752] Server  LOG     [DEBUG] Final dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.752] Server  LOG     [DEBUG] Generating ngetesttt-testing (testing):
+[01:27:55.753] Server  LOG     App Secret Keys: ["DB_HOST","DB_NAME","DB_PASS","DB_PORT","DB_USER","DB_DATABASE","DB_USERNAME","DB_PASSWORD"]
+[01:27:55.788] Server  LOG     [DEBUG] Mapping DB Secrets for type: "postgres"
+[01:27:55.788] Server  LOG     [DEBUG] Initial dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.788] Server  LOG     [DEBUG] Final dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.789] Server  LOG     [DEBUG] Generating ngetesttt-db-prod (prod):
+[01:27:55.789] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]
+[01:27:55.826] Server  LOG     [DEBUG] Mapping DB Secrets for type: "postgres"
+[01:27:55.826] Server  LOG     [DEBUG] Initial dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.826] Server  LOG     [DEBUG] Final dbSecretObj: "{\n  \"POSTGRES_DB\": \"todoapp_php_db\",\n  \"POSTGRES_USER\": \"postgres\",\n  \"POSTGRES_PASSWORD\": \"buattesting\"\n}"
+[01:27:55.826] Server  LOG     [DEBUG] Generating ngetesttt-db-testing (testing):
+[01:27:55.826] Server  LOG     DB Secret Keys: ["POSTGRES_DB","POSTGRES_USER","POSTGRES_PASSWORD"]

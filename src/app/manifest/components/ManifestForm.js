@@ -64,6 +64,30 @@ export default function ManifestForm({ onClose, onSuccess }) {
       })
       .catch(err => console.error("Failed to fetch next ID:", err));
   }, []);
+  
+  // --- Auto-Update DB_HOST when App Name/ID changes ---
+  useEffect(() => {
+    if (form.dbType === 'none') return;
+    
+    const dbHostValue = `svc-${form.appName || 'app'}-db-${form.appId || '000'}`;
+    
+    setForm(prev => {
+        const newAppSecrets = [...prev.appSecrets];
+        const hostIndex = newAppSecrets.findIndex(s => s.key === 'DB_HOST');
+        
+        if (hostIndex >= 0) {
+             newAppSecrets[hostIndex] = { 
+                 ...newAppSecrets[hostIndex], 
+                 value: dbHostValue,
+                 valueProd: dbHostValue,
+                 valueTest: dbHostValue
+             };
+        } else {
+             newAppSecrets.unshift({ key: "DB_HOST", value: dbHostValue, valueProd: dbHostValue, valueTest: dbHostValue });
+        }
+        return { ...prev, appSecrets: newAppSecrets };
+    });
+  }, [form.appName, form.appId, form.dbType]);
 
   // --- Helper: Parse .env ---
   const parseEnvFile = (content) => {
@@ -590,12 +614,20 @@ export default function ManifestForm({ onClose, onSuccess }) {
                     </div>
 
                     <div className="space-y-3">
-                        {form.dbSecrets.map((secret, idx) => (
-                        <div key={idx} className="flex gap-2 items-start">
+                        {form.dbSecrets.map((secret, idx) => {
+                          const protectedKeys = [
+                              "POSTGRES_DB", "POSTGRES_USER", "POSTGRES_PASSWORD",
+                              "MYSQL_DATABASE", "MYSQL_USER", "MYSQL_PASSWORD", "MYSQL_ROOT_PASSWORD"
+                          ];
+                          const isProtected = protectedKeys.includes(secret.key);
+
+                          return (
+                          <div key={idx} className="flex gap-2 items-start">
                             <input placeholder="KEY" 
-                            className="flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800 font-mono"
-                            value={secret.key}
-                            onChange={e => updateDbSecret(idx, 'key', e.target.value)}
+                              className={`flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800 font-mono ${isProtected ? 'opacity-70 cursor-not-allowed bg-gray-100 dark:bg-neutral-900' : ''}`}
+                              value={secret.key}
+                              onChange={e => updateDbSecret(idx, 'key', e.target.value)}
+                              disabled={isProtected}
                             />
 
                             {!form.separateDbSecrets ? (
@@ -631,11 +663,12 @@ export default function ManifestForm({ onClose, onSuccess }) {
                                 </div>
                             ) }
                             
-                            <button type="button" onClick={() => removeDbSecret(idx)} className="p-2 text-red-500 hover:bg-red-500/10 rounded h-[34px]">
-                            <Trash2 size={16} />
+                            <button type="button" onClick={() => removeDbSecret(idx)} className={`p-2 text-red-500 hover:bg-red-500/10 rounded h-[34px] ${isProtected ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isProtected}>
+                              <Trash2 size={16} />
                             </button>
-                        </div>
-                        ))}
+                          </div>
+                          );
+                        })}
                         
                         <button type="button" onClick={addDbSecret} className="text-sm flex items-center gap-1 text-[#FFA500] font-bold mt-2 hover:opacity-80">
                         <Plus size={16} /> Add DB Secret
