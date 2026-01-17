@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import Navigation from '../components/Navigation';
+import DashboardLayout from '../components/DashboardLayout';
 import {
     BarChart3,
     GitBranch,
@@ -128,13 +128,6 @@ export default function ToolsPage() {
         }
     }, []);
 
-    const handleNavigation = (pageId) => {
-        if (pageId === 'jenkins') router.push('/');
-        if (pageId === 'k8s-secret') router.push('/secrets');
-        if (pageId === 'manifest') router.push('/manifest');
-        if (pageId === 'tools') router.push('/tools');
-    };
-
     const startEdit = (e, tool) => {
         e.preventDefault(); // Prevent Link navigation
         e.stopPropagation();
@@ -173,11 +166,8 @@ export default function ToolsPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 transition-colors">
-            <Navigation activePage="tools" onPageChange={handleNavigation} />
-
-            <div className="md:ml-60 min-h-screen text-neutral-900 dark:text-white p-6">
-                <div className="max-w-7xl mx-auto">
+        <DashboardLayout>
+                <div className="w-full">
 
                     {/* Header */}
                     <div className="mb-8">
@@ -277,8 +267,7 @@ export default function ToolsPage() {
                         })}
                     </div>
                 </div>
-            </div>
-        </div>
+        </DashboardLayout>
     );
 }
 

@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import AuthProvider from './components/AuthProvider';
 import ThemeProvider from './providers/ThemeProvider';
+import { SidebarProvider } from './providers/SidebarProvider';
 
 export const metadata = {
   title: 'DevOps Gateway',
@@ -17,9 +18,11 @@ export default function RootLayout({ children }) {
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <AuthProvider>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <SidebarProvider>
+            <ThemeProvider>
+              {children}
+            </ThemeProvider>
+          </SidebarProvider>
         </AuthProvider>
       </body>
     </html>

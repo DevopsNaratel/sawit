@@ -95,3 +95,861 @@ Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allow
 [02:05:44.862] Server  LOG      ✓ Compiled in 81ms
 [02:10:41.399] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
 [02:10:48.840] Server  LOG      ✓ Compiled in 28ms
+[02:14:42.200] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:24:44.019] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:24:54.065] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:24:54.150] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:30:53.538] Server  LOG      ✓ Compiled in 75ms
+[02:31:47.304] Server  LOG      ✓ Compiled in 112ms
+[02:31:58.562] Server  LOG      ✓ Compiled in 28ms
+[02:32:42.269] Server  LOG      ✓ Compiled in 38ms
+[02:35:49.621] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:35:49.709] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:35:57.936] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:35:58.024] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:36:03.198] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:36:03.281] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:36:05.877] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:36:05.950] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:36:07.350] Server  LOG      ✓ Compiled in 40ms
+[02:36:07.463] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:08.257] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:12.750] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:36:12.851] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:12.987] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:13.081] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:13.281] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:13.281] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:13.281] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:13.592] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:13.592] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:14.035] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:14.035] Browser ERROR   Fetch Error: {}
+[02:36:14.035] Browser ERROR   [next-auth][error][CLIENT_FETCH_ERROR] 
+https://next-auth.js.org/errors#client_fetch_error JSON.parse: unexpected character at line 1 column 1 of the JSON data {"error":{"message":"JSON.parse: unexpected character at line 1 column 1 of the JSON data","name":"SyntaxError","stack":""},"message":"JSON.parse: unexpected character at line 1 column 1 of the JSON data","url":"/api/auth/session"}
+[02:36:14.035] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:14.300] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:14.300] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:14.300] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:14.300] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:15.735] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:16.246] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:21.462] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:36:21.773] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:21.773] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:21.773] Browser ERROR   Fetch Error: {}
+[02:36:21.773] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:21.773] Browser ERROR   [next-auth][error][CLIENT_FETCH_ERROR] 
+https://next-auth.js.org/errors#client_fetch_error JSON.parse: unexpected character at line 1 column 1 of the JSON data {"error":{"message":"JSON.parse: unexpected character at line 1 column 1 of the JSON data","name":"SyntaxError","stack":""},"message":"JSON.parse: unexpected character at line 1 column 1 of the JSON data","url":"/api/auth/session"}
+[02:36:21.773] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:22.211] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:22.211] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:22.211] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:22.211] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js:723:7
+Parsing ecmascript source code failed
+  721 |         </div>
+  722 |       </div>
+> 723 |     </div>
+      |       ^^^
+  724 |   );
+  725 | }
+  726 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/secrets/page.js [Server Component]
+[02:36:23.277] Server  LOG      ✓ Compiled in 41ms
+[02:36:26.080] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:36:31.072] Server  LOG      ✓ Compiled in 33ms
+[02:36:37.746] Server  LOG      ✓ Compiled in 26ms
+[02:36:37.850] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js:279:11
+Parsing ecmascript source code failed
+  277 |                 </div>
+  278 |             </div>
+> 279 |         </div>
+      |           ^^^
+  280 |     );
+  281 | }
+  282 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+[02:36:38.261] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js:279:11
+Parsing ecmascript source code failed
+  277 |                 </div>
+  278 |             </div>
+> 279 |         </div>
+      |           ^^^
+  280 |     );
+  281 | }
+  282 |
+
+Expected corresponding JSX closing tag for <DashboardLayout>
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+[02:36:42.162] Server  LOG      ✓ Compiled in 38ms
+[02:37:04.453] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:37:04.684] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:38:36.993] Server  LOG      ✓ Compiled in 69ms
+[02:38:47.329] Server  LOG      ✓ Compiled in 30ms
+[02:39:00.889] Server  LOG      ✓ Compiled in 31ms
+[02:39:00.993] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js:206:5
+Parsing ecmascript source code failed
+  204 |
+  205 |       </div>
+> 206 |     </DashboardLayout>
+      |     ^
+  207 |   );
+  208 | }
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+[02:39:00.993] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js:206:6
+Parsing ecmascript source code failed
+  204 |
+  205 |       </div>
+> 206 |     </DashboardLayout>
+      |      ^^^^^^^^^^^^^^^^^
+  207 |   );
+  208 | }
+
+Unterminated regexp literal
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+[02:39:01.210] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js:206:5
+Parsing ecmascript source code failed
+  204 |
+  205 |       </div>
+> 206 |     </DashboardLayout>
+      |     ^
+  207 |   );
+  208 | }
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+[02:39:01.210] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js:206:6
+Parsing ecmascript source code failed
+  204 |
+  205 |       </div>
+> 206 |     </DashboardLayout>
+      |      ^^^^^^^^^^^^^^^^^
+  207 |   );
+  208 | }
+
+Unterminated regexp literal
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/manifest/page.js [Server Component]
+[02:39:12.456] Server  LOG      ✓ Compiled in 28ms
+[02:39:12.562] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js:278:9
+Parsing ecmascript source code failed
+  276 |                 </div>
+  277 |             </div>
+> 278 |         </DashboardLayout>
+      |         ^
+  279 |     );
+  280 | }
+  281 |
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+[02:39:12.562] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js:278:10
+Parsing ecmascript source code failed
+  276 |                 </div>
+  277 |             </div>
+> 278 |         </DashboardLayout>
+      |          ^^^^^^^^^^^^^^^^^
+  279 |     );
+  280 | }
+  281 |
+
+Unterminated regexp literal
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+[02:39:13.306] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js:278:9
+Parsing ecmascript source code failed
+  276 |                 </div>
+  277 |             </div>
+> 278 |         </DashboardLayout>
+      |         ^
+  279 |     );
+  280 | }
+  281 |
+
+Expression expected
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+[02:39:13.306] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js:278:10
+Parsing ecmascript source code failed
+  276 |                 </div>
+  277 |             </div>
+> 278 |         </DashboardLayout>
+      |          ^^^^^^^^^^^^^^^^^
+  279 |     );
+  280 | }
+  281 |
+
+Unterminated regexp literal
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/tools/page.js [Server Component]
+[02:39:17.954] Server  LOG      ✓ Compiled in 28ms
+[02:39:26.808] Server  LOG      ✓ Compiled in 23ms
+[02:39:26.910] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/components/JenkinsDashboard.js:275:6
+Parsing ecmascript source code failed
+  273 |         </footer>
+  274 |       </div>
+> 275 |     </div>
+      |      ^^^^^
+  276 |   );
+  277 | }
+  278 |
+
+Unterminated regexp literal
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/components/JenkinsDashboard.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/components/JenkinsDashboard.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Server Component]
+[02:39:27.224] Browser ERROR   ./webui-devops/Naratel-Devops-Dashboard/src/app/components/JenkinsDashboard.js:275:6
+Parsing ecmascript source code failed
+  273 |         </footer>
+  274 |       </div>
+> 275 |     </div>
+      |      ^^^^^
+  276 |   );
+  277 | }
+  278 |
+
+Unterminated regexp literal
+
+Import traces:
+  Client Component Browser:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/components/JenkinsDashboard.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Client Component Browser]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Server Component]
+
+  Client Component SSR:
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/components/JenkinsDashboard.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Client Component SSR]
+    ./webui-devops/Naratel-Devops-Dashboard/src/app/page.js [Server Component]
+[02:39:31.948] Server  LOG      ✓ Compiled in 29ms
+[02:39:42.461] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:39:42.581] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:39:52.316] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:39:52.518] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:39:59.175] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:39:59.253] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:40:07.765] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:40:07.882] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:43:39.304] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:43:39.356] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:43:46.785] Server  LOG      ✓ Compiled in 49ms
+[02:44:27.323] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:27.447] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:32.178] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:32.387] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:37.093] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:37.307] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:40.411] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:40.512] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:43.987] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:44:44.159] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:46:05.221] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[02:46:44.963] Server  LOG      ✓ Compiled in 117ms
+[02:46:54.887] Server  LOG      ✓ Compiled in 20ms
+[02:47:01.546] Server  LOG      ✓ Compiled in 42ms
+[02:47:09.042] Server  LOG      ✓ Compiled in 31ms
+[02:47:17.396] Server  LOG      ✓ Compiled in 29ms
+[02:47:20.227] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:47:20.302] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:47:27.084] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:47:27.500] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:47:29.679] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:47:29.795] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:47:33.940] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:47:34.000] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:50:59.874] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:50:59.876] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:51:03.480] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:51:03.660] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:53:34.059] Server  LOG      ✓ Compiled in 27ms
+[02:53:38.012] Server  LOG      ✓ Compiled in 28ms
+[02:53:41.420] Server  LOG      ✓ Compiled in 24ms
+[02:53:52.192] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:53:52.417] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:53:55.057] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:53:55.289] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:04.998] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:05.220] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:13.122] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:13.236] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:23.187] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:33.274] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:59.411] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:54:59.520] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:55:47.975] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:55:48.137] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:56:04.842] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:56:05.026] Server  LOG     Optimization: Processing 0 active jobs out of 6 total jobs.
+[02:56:45.388] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold

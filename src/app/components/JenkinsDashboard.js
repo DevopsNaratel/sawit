@@ -126,14 +126,7 @@ export default function JenkinsDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 text-neutral-900 dark:text-white p-6 font-sans selection:bg-[#FFA500]/30 transition-colors">
-      {/* Dynamic Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[10%] -right-[5%] w-[500px] h-[500px] bg-[#FFA500]/5 rounded-full blur-[120px]" />
-        <div className="absolute -bottom-[10%] -left-[5%] w-[500px] h-[500px] bg-[#FFA500]/5 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="w-full relative z-10">
         {/* Header Section */}
         <header className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
           <div>
@@ -279,6 +272,5 @@ export default function JenkinsDashboard() {
           </p>
         </footer>
       </div>
-    </div>
   );
 }

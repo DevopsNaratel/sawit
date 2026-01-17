@@ -9,7 +9,7 @@ import {
   X,
   Loader2
 } from "lucide-react";
-import Navigation from "../components/Navigation";
+import DashboardLayout from "../components/DashboardLayout";
 import { useRouter } from "next/navigation";
 import ManifestForm from "./components/ManifestForm";
 import AppList from "./components/AppList";
@@ -77,13 +77,6 @@ export default function ManifestPage() {
     }
   };
 
-  const handleNavigation = (pageId) => {
-    if (pageId === 'jenkins') router.push('/');
-    if (pageId === 'k8s-secret') router.push('/secrets');
-    if (pageId === 'manifest') router.push('/manifest');
-    if (pageId === 'tools') router.push('/tools');
-  };
-
   const handleFormSuccess = (msg) => {
     setIsModalOpen(false);
     setMessage({ text: msg, type: 'success' });
@@ -113,11 +106,8 @@ export default function ManifestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 transition-colors">
-      <Navigation activePage="manifest" onPageChange={handleNavigation} />
-
-      <div className="md:ml-60 min-h-screen text-neutral-900 dark:text-white p-6 relative">
-        <div className="max-w-6xl mx-auto">
+    <DashboardLayout>
+        <div className="w-full">
           
           {/* Header */}
           <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -205,7 +195,6 @@ export default function ManifestPage() {
             </div>
         )}
 
-      </div>
-    </div>
+    </DashboardLayout>
   );
 }
