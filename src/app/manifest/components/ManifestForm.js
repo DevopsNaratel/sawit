@@ -116,20 +116,13 @@ export default function ManifestForm({ onClose, onSuccess }) {
   };
   const clearAppEnv = () => { setAppFileName(''); setForm(prev => ({ ...prev, appSecrets: [] })); };
   const addAppSecret = () => { setForm(prev => ({ ...prev, appSecrets: [...prev.appSecrets, { key: "", value: "", valueProd: "", valueTest: "" }] })); };
-  const toggleSeparateAppSecrets = () => {
-    setForm(prev => {
-        const isSeparating = !prev.separateAppSecrets;
-        const newSecrets = prev.appSecrets.map(s => isSeparating ? { ...s, valueProd: s.value, valueTest: s.value } : { ...s, value: s.valueProd });
-        return { ...prev, separateAppSecrets: isSeparating, appSecrets: newSecrets };
-    });
-  };
+  
   const updateAppSecret = (index, field, value) => {
     const updated = [...form.appSecrets];
     updated[index][field] = value;
     setForm(prev => ({ ...prev, appSecrets: updated }));
   };
-  const removeAppSecret = (index) => { setForm(prev => ({ ...prev, appSecrets: prev.appSecrets.filter((_, i) => i !== index) })); };
-
+  
   // DB Secrets
   const handleDbFile = (file) => {
     if (!file.name.endsWith('.env') && !file.name.startsWith('.env')) { setMessage({ text: 'Please upload a valid .env file', type: 'error' }); return; }
@@ -147,20 +140,12 @@ export default function ManifestForm({ onClose, onSuccess }) {
     reader.readAsText(file);
   };
   const clearDbEnv = () => { setDbFileName(''); setForm(prev => ({ ...prev, dbSecrets: [] })); };
-  const addDbSecret = () => { setForm(prev => ({ ...prev, dbSecrets: [...prev.dbSecrets, { key: "", value: "", valueProd: "", valueTest: "" }] })); };
-  const toggleSeparateDbSecrets = () => {
-    setForm(prev => {
-        const isSeparating = !prev.separateDbSecrets;
-        const newSecrets = prev.dbSecrets.map(s => isSeparating ? { ...s, valueProd: s.value, valueTest: s.value } : { ...s, value: s.valueProd });
-        return { ...prev, separateDbSecrets: isSeparating, dbSecrets: newSecrets };
-    });
-  };
+  
   const updateDbSecret = (index, field, value) => {
     const updated = [...form.dbSecrets];
     updated[index][field] = value;
     setForm(prev => ({ ...prev, dbSecrets: updated }));
   };
-  const removeDbSecret = (index) => { setForm(prev => ({ ...prev, dbSecrets: prev.dbSecrets.filter((_, i) => i !== index) })); };
 
   const handleDbTypeChange = (type) => {
      let newDbSecrets = [];
@@ -224,8 +209,6 @@ export default function ManifestForm({ onClose, onSuccess }) {
     if (step < 4) {
         nextStep();
     }
-    // If step === 4, do nothing. This prevents Enter key from submitting the form automatically.
-    // User must explicitly click the "Deploy App" button.
   };
 
   // --- STEPS CONTENT ---
@@ -296,6 +279,7 @@ export default function ManifestForm({ onClose, onSuccess }) {
              <div><label className="block text-xs font-bold text-neutral-500 uppercase mb-1">Service Port</label><input type="number" required className="w-full p-2 text-sm border rounded dark:bg-neutral-950 dark:border-neutral-800 focus:ring-1 focus:ring-[#FFA500] outline-none" value={form.servicePort} onChange={e => setForm({...form, servicePort: parseInt(e.target.value)})} /><p className="text-[10px] text-neutral-400 mt-1">Exposed internal port (e.g. 80)</p></div>
             <div><label className="block text-xs font-bold text-neutral-500 uppercase mb-1">Target Port</label><input type="number" required className="w-full p-2 text-sm border rounded dark:bg-neutral-950 dark:border-neutral-800 focus:ring-1 focus:ring-[#FFA500] outline-none" value={form.targetPort} onChange={e => setForm({...form, targetPort: parseInt(e.target.value)})} /><p className="text-[10px] text-neutral-400 mt-1">Container listening port (e.g. 3000, 8080)</p></div>
         </div>
+        
         {form.dbType !== 'none' && (
             <div className="p-4 rounded-xl bg-neutral-900 text-neutral-200 border border-neutral-700 shadow-inner">
                 <div className="flex items-center gap-2 mb-2 text-green-400"><Database size={16} /><span className="text-xs font-bold uppercase tracking-wider">Internal Database DNS</span></div>
@@ -303,8 +287,10 @@ export default function ManifestForm({ onClose, onSuccess }) {
                 <p className="text-[10px] text-neutral-500 mt-2">Use this hostname to connect to your database from within the cluster. Port: <strong>{form.dbType === 'postgres' ? '5432' : '3306'}</strong>.</p>
             </div>
         )}
-        <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4">
-             {/* Drag & Drop App Secrets */}
+
+        <div className="border-t border-neutral-200 dark:border-neutral-800 pt-6">
+             <div className="flex items-center justify-between mb-4"><h3 className="font-bold text-sm text-neutral-600 dark:text-neutral-300">Application Secrets</h3><button type="button" onClick={addAppSecret} className="text-xs font-bold text-[#FFA500] flex items-center gap-1"><Plus size={12}/> Add</button></div>
+             
              {!appFileName && (
                 <div
                   onDragOver={(e) => { e.preventDefault(); setIsDraggingApp(true); }}
@@ -314,54 +300,40 @@ export default function ManifestForm({ onClose, onSuccess }) {
                     setIsDraggingApp(false);
                     if(e.dataTransfer.files.length > 0) handleAppFile(e.dataTransfer.files[0]);
                   }}
-                  className={`mb-4 border border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${ 
+                  className={`mb-4 border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${ 
                     isDraggingApp
                       ? 'border-[#FFA500] bg-[#FFA500]/10'
-                      : 'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-600'
-                  }`}
-                >
-                  <input
-                    type="file"
-                    accept=".env"
-                    onChange={(e) => { if(e.target.files.length) handleAppFile(e.target.files[0]) }}
-                    className="hidden"
-                    id="app-env-input"
-                  />
+                      : 'border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-600'
+                  }`}>
+                  <input type="file" accept=".env" onChange={(e) => { if(e.target.files.length) handleAppFile(e.target.files[0]); e.target.value = null; }} className="hidden" id="app-env-input" />
                   <label htmlFor="app-env-input" className="cursor-pointer block">
                     <Upload className="mx-auto mb-2 text-neutral-400 dark:text-neutral-500" size={24} />
-                    <p className="text-sm font-semibold text-neutral-600 dark:text-neutral-300 mb-0.5">
-                      Drag & drop .env or Click to select
-                    </p>
+                    <p className="text-sm font-semibold text-neutral-600 dark:text-neutral-300 mb-0.5">Drag & drop .env or Click to select</p>
                   </label>
                 </div>
               )}
 
-              {/* App File Info */}
               {appFileName && (
                 <div className="flex items-center justify-between bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-3 rounded-md mb-4">
                   <div className="flex items-center gap-2">
                     <FileText className="text-green-500" size={16} />
-                    <div>
-                      <p className="font-semibold text-xs text-neutral-900 dark:text-white">{appFileName}</p>
-                      <p className="text-[10px] text-neutral-500">{form.appSecrets.length} variables loaded</p>
-                    </div>
+                    <div><p className="font-semibold text-xs text-neutral-900 dark:text-white">{appFileName}</p><p className="text-[10px] text-neutral-500">{form.appSecrets.length} variables loaded</p></div>
                   </div>
-                  <button type="button" onClick={clearAppEnv} className="text-neutral-500 hover:text-red-500 transition-colors">
-                    <X size={14} />
-                  </button>
+                  <button type="button" onClick={clearAppEnv} className="text-neutral-500 hover:text-red-500 transition-colors"><X size={14} /></button>
                 </div>
               )}
 
-             <div className="flex items-center justify-between mb-4"><h3 className="font-bold text-sm text-neutral-600 dark:text-neutral-300">Application Secrets</h3><button type="button" onClick={addAppSecret} className="text-xs font-bold text-[#FFA500] flex items-center gap-1"><Plus size={12}/> Add</button></div>
              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
                  {form.appSecrets.map((secret, idx) => (<div key={idx} className="flex gap-2"><input className="flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800 font-mono" value={secret.key} onChange={e => updateAppSecret(idx, 'key', e.target.value)} placeholder="KEY" /><input className="flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800" value={secret.value} onChange={e => updateAppSecret(idx, 'value', e.target.value)} placeholder="VALUE" /></div>))}
-                 {form.appSecrets.length === 0 && <p className="text-xs text-neutral-400 italic">No secrets configured.</p>}
+                 {form.appSecrets.length === 0 && !appFileName && <p className="text-xs text-neutral-400 italic">No secrets configured.</p>}
              </div>
         </div>
+
          {form.dbType !== 'none' && (
-             <div className="border-t border-neutral-200 dark:border-neutral-800 pt-4">
-                    {/* Drag & Drop DB Secrets */}
-                    {!dbFileName && (
+             <div className="border-t border-neutral-200 dark:border-neutral-800 pt-6">
+                 <h3 className="font-bold text-sm text-neutral-600 dark:text-neutral-300 mb-4">Database Secrets</h3>
+                 
+                 {!dbFileName && (
                         <div
                         onDragOver={(e) => { e.preventDefault(); setIsDraggingDb(true); }}
                         onDragLeave={(e) => { e.preventDefault(); setIsDraggingDb(false); }}
@@ -370,45 +342,33 @@ export default function ManifestForm({ onClose, onSuccess }) {
                             setIsDraggingDb(false);
                             if(e.dataTransfer.files.length > 0) handleDbFile(e.dataTransfer.files[0]);
                         }}
-                        className={`mb-4 border border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${ 
+                        className={`mb-4 border-2 border-dashed rounded-lg p-6 text-center transition-all cursor-pointer ${ 
                             isDraggingDb
                             ? 'border-[#FFA500] bg-[#FFA500]/10'
-                            : 'border-neutral-300 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-600'
-                        }`}
-                        >
-                        <input
-                            type="file"
-                            accept=".env"
-                            onChange={(e) => { if(e.target.files.length) handleDbFile(e.target.files[0]) }}
-                            className="hidden"
-                            id="db-env-input"
-                        />
+                            : 'border-neutral-300 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-900 hover:border-neutral-400 dark:hover:border-neutral-600'
+                        }`}>
+                        <input type="file" accept=".env" onChange={(e) => { if(e.target.files.length) handleDbFile(e.target.files[0]); e.target.value = null; }} className="hidden" id="db-env-input" />
                         <label htmlFor="db-env-input" className="cursor-pointer block">
                             <Upload className="mx-auto mb-2 text-neutral-400 dark:text-neutral-500" size={24} />
-                            <p className="text-sm font-semibold text-neutral-600 dark:text-neutral-300 mb-0.5">
-                                Drag & drop .env or Click to select
-                            </p>
+                            <p className="text-sm font-semibold text-neutral-600 dark:text-neutral-300 mb-0.5">Drag & drop .env or Click to select</p>
                         </label>
                         </div>
                     )}
 
-                    {/* DB File Info */}
                     {dbFileName && (
                         <div className="flex items-center justify-between bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-3 rounded-md mb-4">
                             <div className="flex items-center gap-2">
                             <FileText className="text-green-500" size={16} />
-                            <div>
-                                <p className="font-semibold text-xs text-neutral-900 dark:text-white">{dbFileName}</p>
-                                <p className="text-[10px] text-neutral-500">{form.dbSecrets.length} variables loaded</p>
+                            <div><p className="font-semibold text-xs text-neutral-900 dark:text-white">{dbFileName}</p><p className="text-[10px] text-neutral-500">{form.dbSecrets.length} variables loaded</p></div>
                             </div>
-                            </div>
-                            <button type="button" onClick={clearDbEnv} className="text-neutral-500 hover:text-red-500 transition-colors">
-                            <X size={14} />
-                            </button>
+                            <button type="button" onClick={clearDbEnv} className="text-neutral-500 hover:text-red-500 transition-colors"><X size={14} /></button>
                         </div>
                     )}
-                 <h3 className="font-bold text-sm text-neutral-600 dark:text-neutral-300 mb-2">Database Secrets</h3><div className="space-y-2">{form.dbSecrets.map((secret, idx) => (<div key={idx} className="flex gap-2"><input className="flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800 font-mono bg-neutral-100 dark:bg-neutral-800" value={secret.key} readOnly /><input className="flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800" value={secret.value} onChange={e => updateDbSecret(idx, 'value', e.target.value)} placeholder="VALUE" /></div>))}
-</div></div>
+
+                 <div className="space-y-2">
+                    {form.dbSecrets.map((secret, idx) => (<div key={idx} className="flex gap-2"><input className="flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800 font-mono bg-neutral-100 dark:bg-neutral-800" value={secret.key} readOnly /><input className="flex-1 p-2 text-xs border rounded dark:bg-neutral-950 dark:border-neutral-800" value={secret.value} onChange={e => updateDbSecret(idx, 'value', e.target.value)} placeholder="VALUE" /></div>))}
+                 </div>
+             </div>
          )}
     </div>
   );
