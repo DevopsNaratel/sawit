@@ -350,9 +350,9 @@ export default function ManifestForm({ onClose, onSuccess }) {
        <div className="flex-1 overflow-y-auto p-8 relative">
             {message.text && (<div className={`mb-6 p-4 rounded-lg border flex items-center gap-3 text-sm animate-in slide-in-from-top-2 ${message.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'}`}>{message.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}<span>{message.text}</span></div>)}
            <form id="wizard-form" onSubmit={handleSubmit}>
-               {step === 1 && renderIdentityStep()}
-               {step === 2 && renderDatabaseStep()}
-               {step === 3 && renderArchitectureStep()}
+               {step === 1 && renderArchitectureStep()}
+               {step === 2 && renderIdentityStep()}
+               {step === 3 && renderDatabaseStep()}
                {step === 4 && renderConfigStep()}
            </form>
        </div>
