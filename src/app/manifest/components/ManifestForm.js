@@ -228,15 +228,7 @@ export default function ManifestForm({ onClose, onSuccess }) {
   };
   const prevStep = () => setStep(prev => Math.max(prev - 1, 1));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Safety check: Prevent submission on earlier steps (e.g. via Enter key)
-    if (step < 4) {
-        nextStep();
-        return;
-    }
-
+  const handleDeploy = async () => {
     setLoading(true);
     setMessage({ text: '', type: '' });
     try {
@@ -248,6 +240,15 @@ export default function ManifestForm({ onClose, onSuccess }) {
       const result = await res.json();
       if (res.ok) { onSuccess(result.message); } else { throw new Error(result.error || "Failed to generate manifest"); }
     } catch (err) { setMessage({ text: err.message, type: 'error' }); } finally { setLoading(false); }
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (step < 4) {
+        nextStep();
+    }
+    // If step === 4, do nothing. This prevents Enter key from submitting the form automatically.
+    // User must explicitly click the "Deploy App" button.
   };
 
   // --- STEPS CONTENT ---
@@ -356,7 +357,7 @@ export default function ManifestForm({ onClose, onSuccess }) {
 
        <div className="flex-1 overflow-y-auto p-8 relative">
             {message.text && (<div className={`mb-6 p-4 rounded-lg border flex items-center gap-3 text-sm animate-in slide-in-from-top-2 ${message.type === 'success' ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300' : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'}`}>{message.type === 'success' ? <CheckCircle size={18} /> : <AlertCircle size={18} />}<span>{message.text}</span></div>)}
-           <form id="wizard-form" onSubmit={handleSubmit}>
+           <form id="wizard-form" onSubmit={handleFormSubmit}>
                {step === 1 && renderArchitectureStep()}
                {step === 2 && renderIdentityStep()}
                {step === 3 && renderDatabaseStep()}
@@ -366,7 +367,7 @@ export default function ManifestForm({ onClose, onSuccess }) {
 
        <div className="p-6 bg-white dark:bg-neutral-900 border-t border-neutral-200 dark:border-neutral-800 flex justify-between items-center z-10">
            <button type="button" onClick={prevStep} disabled={step === 1} className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold text-neutral-600 hover:bg-neutral-100 dark:text-neutral-300 dark:hover:bg-neutral-800 disabled:opacity-30 disabled:cursor-not-allowed transition-all"><ChevronLeft size={16} /> Back</button>
-           {step < 4 ? (<button type="button" onClick={nextStep} className="flex items-center gap-2 px-8 py-2.5 rounded-lg text-sm font-bold bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 shadow-md transition-all transform active:scale-95">Next Step <ChevronRight size={16} /></button>) : (<button type="submit" form="wizard-form" disabled={loading} className="flex items-center gap-2 bg-[#FFA500] hover:bg-[#FFA500]/90 text-white font-bold py-2.5 px-8 rounded-lg shadow-lg shadow-orange-500/20 transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">{loading ? (<><Loader2 size={18} className="animate-spin" />Creating...</>) : (<><Server size={18} />Deploy App</>)}</button>)}
+           {step < 4 ? (<button type="button" onClick={nextStep} className="flex items-center gap-2 px-8 py-2.5 rounded-lg text-sm font-bold bg-neutral-900 text-white hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-200 shadow-md transition-all transform active:scale-95">Next Step <ChevronRight size={16} /></button>) : (<button type="button" onClick={handleDeploy} disabled={loading} className="flex items-center gap-2 bg-[#FFA500] hover:bg-[#FFA500]/90 text-white font-bold py-2.5 px-8 rounded-lg shadow-lg shadow-orange-500/20 transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">{loading ? (<><Loader2 size={18} className="animate-spin" />Creating...</>) : (<><Server size={18} />Deploy App</>)}</button>)}
        </div>
     </div>
   );
