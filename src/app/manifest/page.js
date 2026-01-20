@@ -26,8 +26,8 @@ export default function ManifestPage() {
   const [isLoadingRegistry, setIsLoadingRegistry] = useState(true);
   const [isDeleting, setIsDeleting] = useState(null);
   
-  // Modals State
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // View State
+  const [isCreating, setIsCreating] = useState(false);
   
   const [isEditAppSecretsOpen, setIsEditAppSecretsOpen] = useState(false);
   const [isEditDbSecretsOpen, setIsEditDbSecretsOpen] = useState(false);
@@ -90,7 +90,7 @@ export default function ManifestPage() {
   };
 
   const handleFormSuccess = (msg) => {
-    setIsModalOpen(false);
+    setIsCreating(false);
     setMessage({ text: msg, type: 'success' });
     fetchRegistry();
   };
@@ -130,10 +130,10 @@ export default function ManifestPage() {
 
   return (
     <DashboardLayout>
-        <div className="w-full">
+        <div className="w-full h-full flex flex-col">
           
           {/* Feedback Message (Page Level) */}
-          {message && (
+          {message && !isCreating && (
             <div className={`mb-6 p-4 rounded-lg border flex items-center gap-3 text-sm animate-in fade-in slide-in-from-top-2 ${ 
               message.type === 'success' 
                 ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300' 
@@ -145,44 +145,46 @@ export default function ManifestPage() {
             </div>
           )}
 
-          {/* Apps Grid */}
-          {isLoadingRegistry ? (
-            <div className="flex flex-col items-center justify-center py-20 text-neutral-500">
-              <Loader2 size={48} className="animate-spin text-[#FFA500] mb-4" />
-              <p>Loading application registry...</p>
-            </div>
+          {isCreating ? (
+              /* Create App View (Replaces AppList) */
+              <div className="flex-1 flex justify-center items-start pt-6 animate-in fade-in slide-in-from-bottom-4">
+                  <ManifestForm 
+                      onClose={() => setIsCreating(false)} 
+                      onSuccess={handleFormSuccess} 
+                  />
+              </div>
           ) : (
-            <AppList 
-                apps={filteredApps}
-                onDelete={handleDelete}
-                onEditAppSecrets={handleEditAppSecrets}
-                onEditDbSecrets={handleEditDbSecrets}
-                onEditIngress={handleEditIngress}
-                isDeleting={isDeleting}
-                onCreate={() => setIsModalOpen(true)}
-            />
+            <>
+              {/* Apps Grid */}
+              {isLoadingRegistry ? (
+                <div className="flex flex-col items-center justify-center py-20 text-neutral-500">
+                  <Loader2 size={48} className="animate-spin text-[#FFA500] mb-4" />
+                  <p>Loading application registry...</p>
+                </div>
+              ) : (
+                <AppList 
+                    apps={filteredApps}
+                    onDelete={handleDelete}
+                    onEditAppSecrets={handleEditAppSecrets}
+                    onEditDbSecrets={handleEditDbSecrets}
+                    onEditIngress={handleEditIngress}
+                    isDeleting={isDeleting}
+                    onCreate={() => setIsCreating(true)}
+                />
+              )}
+
+              {/* Floating Action Button */}
+              <button
+                  onClick={() => setIsCreating(true)}
+                  className="fixed bottom-8 right-8 bg-[#FFA500] hover:bg-[#FFA500]/90 text-white p-4 rounded-full shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all transform hover:scale-105 z-40 flex items-center gap-2"
+                  title="Add New Application"
+              >
+                  <Plus size={24} />
+                  <span className="font-bold pr-2 hidden md:inline">Add Application</span>
+              </button>
+            </>
           )}
         </div>
-
-        {/* Floating Action Button */}
-        <button
-            onClick={() => setIsModalOpen(true)}
-            className="fixed bottom-8 right-8 bg-[#FFA500] hover:bg-[#FFA500]/90 text-white p-4 rounded-full shadow-lg shadow-orange-500/30 hover:shadow-orange-500/50 transition-all transform hover:scale-105 z-40 flex items-center gap-2"
-            title="Add New Application"
-        >
-            <Plus size={24} />
-            <span className="font-bold pr-2 hidden md:inline">Add Application</span>
-        </button>
-
-        {/* Modal Create Overlay */}
-        {isModalOpen && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-in fade-in">
-                <ManifestForm 
-                    onClose={() => setIsModalOpen(false)} 
-                    onSuccess={handleFormSuccess} 
-                />
-            </div>
-        )}
 
         {/* Modal Edit App Secrets Overlay */}
         {isEditAppSecretsOpen && editingAppName && (
