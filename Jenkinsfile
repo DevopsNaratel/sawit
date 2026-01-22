@@ -7,7 +7,7 @@ pipeline {
         DOCKER_CRED_ID = "docker-hub"
 
         // URL WebUI Internal (Pastikan bisa diakses Jenkins)
-        WEBUI_API      = "https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev/"
+        WEBUI_API      = "https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev"
 
         APP_VERSION    = ""
     }
