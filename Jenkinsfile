@@ -2,13 +2,13 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME       = "diwapp" // Sesuaikan dengan nama app di WebUI/Registry
-        DOCKER_IMAGE   = "devopsnaratel/diwapp" // Sesuaikan
+        APP_NAME       = "diwapp"
+        DOCKER_IMAGE   = "devopsnaratel/diwapp"
         DOCKER_CRED_ID = "docker-hub"
 
-        // URL WebUI Internal (Pastikan bisa diakses Jenkins)
+        // URL WebUI Base
         WEBUI_API      = "https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev"
-
+        
         APP_VERSION    = ""
     }
 
@@ -42,9 +42,9 @@ pipeline {
             steps {
                 script {
                     echo "Triggering WebUI to create Ephemeral Testing Environment..."
-
+                    // Update: Menambahkan /api/ sebelum jenkins/deploy-test
                     def response = sh(script: """
-                        curl -s -X POST ${WEBUI_API}/jenkins/deploy-test \
+                        curl -s -X POST ${WEBUI_API}/api/jenkins/deploy-test \
                         -H "Content-Type: application/json" \
                         -d '{"appName": "${APP_NAME}", "imageTag": "${APP_VERSION}"}'
                     """, returnStdout: true).trim()
@@ -65,7 +65,6 @@ pipeline {
             steps {
                 script {
                     echo "Running Tests against Testing Env..."
-                    // Tambahkan command test anda disini
                 }
             }
         }
@@ -88,9 +87,9 @@ pipeline {
             steps {
                 script {
                     echo "Updating Production Image Version..."
-
+                    // Update: Menambahkan /api/ sebelum manifest/update-image
                     def response = sh(script: """
-                        curl -s -X POST ${WEBUI_API}/manifest/update-image \
+                        curl -s -X POST ${WEBUI_API}/api/manifest/update-image \
                         -H "Content-Type: application/json" \
                         -d '{"appName": "${APP_NAME}", "env": "prod", "imageTag": "${APP_VERSION}"}'
                     """, returnStdout: true).trim()
@@ -109,8 +108,9 @@ pipeline {
         always {
             script {
                 echo "Cleaning up Ephemeral Testing Environment..."
+                // Update: Menambahkan /api/ sebelum jenkins/destroy-test
                 sh """
-                    curl -s -X POST ${WEBUI_API}/jenkins/destroy-test \
+                    curl -s -X POST ${WEBUI_API}/api/jenkins/destroy-test \
                     -H "Content-Type: application/json" \
                     -d '{"appName": "${APP_NAME}"}'
                 """
