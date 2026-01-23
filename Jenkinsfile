@@ -7,7 +7,7 @@ pipeline {
         DOCKER_CRED_ID = "docker-hub"
 
         // URL WebUI Base
-        WEBUI_API      = "http://localhost:3002"
+        WEBUI_API      = "https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev"
         
         APP_VERSION    = ""
     }
