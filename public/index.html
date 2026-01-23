@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diwapp CLI-style UI</title>
+    <style>
+        body {
+            background-color: #0c0c0c;
+            color: #00ff00;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+            font-size: 14px;
+        }
+        pre {
+            margin: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #00ff00;
+            color: #00ff00;
+            font-family: inherit;
+            font-size: inherit;
+            width: 200px;
+            outline: none;
+        }
+        button {
+            background: #00ff00;
+            color: #000;
+            border: 1px solid #00ff00;
+            font-family: inherit;
+            cursor: pointer;
+            font-weight: bold;
+            padding: 2px 5px;
+        }
+        button:hover {
+            background: #000;
+            color: #00ff00;
+        }
+        .ascii-art {
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            border-bottom: 1px dashed #00ff00;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            margin-top: 30px;
+            display: inline-block;
+        }
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background-color: #00ff00;
+            animation: blink 1s step-end infinite;
+        }
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+<pre class="ascii-art">
+  ____  _                          
+ |  _ \(_)_      ____ _ _ __  _ __ 
+ | | | | \ \ /\ / / _` | '_ \| '_ \
+ | |_| | |\ V  V / (_| | |_) | |_) |
+ |____/|_| \_/\_/ \__,_| .__/| .__/ 
+                       |_|   |_|    
+ v1.0.0 (User Management System)
+</pre>
+
+        <div>
+            <span class="section-title"> > ADD_USER.EXE</span>
+            <form id="userForm">
+                <div class="input-group">
+                    <label>Enter Name :</label>
+                    <input type="text" id="name" autocomplete="off" required>
+                </div>
+                <div class="input-group">
+                    <label>Enter Email:</label>
+                    <input type="email" id="email" autocomplete="off" required>
+                </div>
+                <div style="margin-top: 10px;">
+                    <button type="submit">[ EXECUTE ]</button>
+                </div>
+            </form>
+        </div>
+
+        <div>
+            <span class="section-title"> > QUERY_USERS.DAT</span>
+            <pre id="userTable">
+Loading data...
+            </pre>
+        </div>
+
+        <div style="margin-top: 20px;">
+            > <span id="statusMsg">Ready.</span><span class="cursor"></span>
+        </div>
+    </div>
+
+    <script>
+        const userForm = document.getElementById('userForm');
+        const userTable = document.getElementById('userTable');
+        const statusMsg = document.getElementById('statusMsg');
+
+        function setStatus(msg) {
+            statusMsg.textContent = msg;
+            setTimeout(() => statusMsg.textContent = "Ready.", 3000);
+        }
+
+        // Simple ASCII Table Generator
+        function generateAsciiTable(headers, data) {
+            if (data.length === 0) return "No records found.";
+
+            // Calculate column widths
+            const colWidths = headers.map((h, i) => {
+                const maxDataWidth = Math.max(...data.map(row => String(row[Object.keys(row)[i]] || '').length));
+                return Math.max(h.length, maxDataWidth) + 2; // +2 for padding
+            });
+
+            const separator = '+' + colWidths.map(w => '-'.repeat(w)).join('+') + '+';
+            
+            let table = separator + '\n';
+            
+            // Header
+            table += '|' + headers.map((h, i) => ' ' + h.padEnd(colWidths[i]-1)).join('|') + '|\n';
+            table += separator + '\n';
+
+            // Data
+            data.forEach(row => {
+                const values = Object.values(row);
+                table += '|' + values.map((v, i) => ' ' + String(v).padEnd(colWidths[i]-1)).join('|') + '|\n';
+            });
+
+            table += separator;
+            return table;
+        }
+
+        async function fetchUsers() {
+            try {
+                const response = await fetch('/users');
+                const users = await response.json();
+                
+                // Format for our ASCII generator (clean up data if needed)
+                const cleanUsers = users.map(u => ({
+                    id: u.id,
+                    name: u.name,
+                    email: u.email,
+                    action: '[DEL]' // Just a visual indicator, click handled elsewhere
+                }));
+
+                const tableStr = generateAsciiTable(['ID', 'NAME', 'EMAIL', 'CMD'], cleanUsers);
+                
+                // Hacky way to make the [DEL] clickable in a <pre> tag? 
+                // Actually, let's just render the text. To delete, we might need a CLI command input style
+                // but for simplicity, let's keep the table string but add a small input below for deletion.
+                
+                userTable.textContent = tableStr;
+
+            } catch (err) {
+                userTable.textContent = "Error: Connection lost.";
+            }
+        }
+
+        userForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            setStatus("Processing...");
+            
+            try {
+                const response = await fetch('/users', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+
+                if (response.ok) {
+                    userForm.reset();
+                    fetchUsers();
+                    setStatus("User added successfully.");
+                }
+            } catch (err) {
+                setStatus("Error adding user.");
+            }
+        });
+
+        // Add a deletion command input since clicking ascii text is hard
+        const deleteDiv = document.createElement('div');
+        deleteDiv.innerHTML = '
+            <div class="input-group" style="margin-top: 10px;">
+                <label>DELETE_USER_BY_ID :</label>
+                <input type="number" id="deleteId" style="width: 50px;">
+                <button onclick="executeDelete()">[ DELETE ]</button>
+            </div>
+        ';
+        userTable.parentNode.appendChild(deleteDiv);
+
+        async function executeDelete() {
+            const id = document.getElementById('deleteId').value;
+            if (!id) return; 
+            
+            setStatus(`Deleting ID ${id}...`);
+            try {
+                const response = await fetch(`/users/${id}`, { method: 'DELETE' });
+                if (response.ok) {
+                    document.getElementById('deleteId').value = '';
+                    fetchUsers();
+                    setStatus(`User ${id} deleted.`);
+                } else {
+                    setStatus(`Error: User ${id} not found.`);
+                }
+            } catch (err) {
+                setStatus("Error deleting user.");
+            }
+        }
+
+        fetchUsers();
+    </script>
+</body>
+</html>
