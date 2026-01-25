@@ -251,11 +251,13 @@ service:
 `.trim();
 
                 if (data.migrationEnabled) {
+                    const checkImage = data.dbType === 'postgres' ? 'devopsnaratel/postgresql:18.1' : 'devopsnaratel/mariadb:12.1.2';
                     values += `
 
 migration:
   enabled: true
-  command: "${data.migrationCommand}"`;
+  command: "${data.migrationCommand}"
+  checkImage: "${checkImage}"`;
                 }
 
                 if (data.dbType !== 'none') {
@@ -308,11 +310,13 @@ service:
 `.trim();
 
                 if (data.migrationEnabled) {
+                    const checkImage = data.dbType === 'postgres' ? 'devopsnaratel/postgresql:18.1' : 'devopsnaratel/mariadb:12.1.2';
                     values += `
 
 migration:
   enabled: true
-  command: "${data.migrationCommand}"`;
+  command: "${data.migrationCommand}"
+  checkImage: "${checkImage}"`;
                 }
 
                 if (data.dbType !== 'none') {
