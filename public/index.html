@@ -199,13 +199,13 @@ Loading data...
 
         // Add a deletion command input since clicking ascii text is hard
         const deleteDiv = document.createElement('div');
-        deleteDiv.innerHTML = '
+        deleteDiv.innerHTML = `
             <div class="input-group" style="margin-top: 10px;">
                 <label>DELETE_USER_BY_ID :</label>
                 <input type="number" id="deleteId" style="width: 50px;">
                 <button onclick="executeDelete()">[ DELETE ]</button>
             </div>
-        ';
+        `;
         userTable.parentNode.appendChild(deleteDiv);
 
         async function executeDelete() {

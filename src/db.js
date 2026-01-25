@@ -1,9 +1,11 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+const poolConfig = process.env.DATABASE_URL
+  ? { connectionString: process.env.DATABASE_URL }
+  : undefined;
+
+const pool = new Pool(poolConfig);
 
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err);
