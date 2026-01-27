@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        APP_NAME       = "sawit"
+        APP_NAME       = "diwapp"
         DOCKER_IMAGE   = "devopsnaratel/diwapp"
         DOCKER_CRED_ID = "docker-hub"
 
