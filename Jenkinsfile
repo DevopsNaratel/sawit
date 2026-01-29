@@ -38,6 +38,37 @@ pipeline {
             }
         }
 
+        stage('Configuration & Approval') {
+            steps {
+                script {
+                    echo "Registering pending approval in Dashboard..."
+                    def payload = """
+                    {
+                        "appName": "${APP_NAME}", 
+                        "buildNumber": "${BUILD_NUMBER}", 
+                        "version": "${APP_VERSION}",
+                        "jenkinsUrl": "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}",
+                        "inputId": "ApproveDeploy" 
+                    }
+                    """
+                    
+                    sh(script: """
+                        curl -s -X POST ${WEBUI_API}/api/jenkins/pending \\
+                        -H "Content-Type: application/json" \\
+                        -d '${payload}'
+                    """)
+
+                    try {
+                        input message: "Waiting for configuration & approval from Dashboard...",
+                              id: 'ApproveDeploy'
+                    } catch (Exception e) {
+                        currentBuild.result = 'ABORTED'
+                        error "Deployment Cancelled via Dashboard."
+                    }
+                }
+            }
+        }
+
         stage('Deploy Testing (Ephemeral)') {
             steps {
                 script {
@@ -64,20 +95,37 @@ pipeline {
             steps {
                 script {
                     echo "Running Tests against Testing Env..."
-                    // Add your test commands here
                 }
             }
         }
 
-        stage('Approval for Production') {
+        stage('Final Production Approval') {
             steps {
                 script {
+                    echo "Requesting Final Confirmation from Dashboard..."
+                    def payload = """
+                    {
+                        "appName": "${APP_NAME}", 
+                        "buildNumber": "${BUILD_NUMBER}", 
+                        "version": "${APP_VERSION}",
+                        "jenkinsUrl": "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}",
+                        "inputId": "ConfirmProd",
+                        "isFinal": true
+                    }
+                    """
+                    
+                    sh(script: """
+                        curl -s -X POST ${WEBUI_API}/api/jenkins/pending \\
+                        -H "Content-Type: application/json" \\
+                        -d '${payload}'
+                    """)
+
                     try {
-                        input message: "Testing Done. Approve deploy ${APP_VERSION} to Production?",
-                              id: 'ApproveDeploy'
+                        input message: "Waiting for Final Production Confirmation...",
+                              id: 'ConfirmProd'
                     } catch (Exception e) {
                         currentBuild.result = 'ABORTED'
-                        error "Deployment to Production Cancelled."
+                        error "Production Deployment Cancelled."
                     }
                 }
             }
@@ -98,6 +146,23 @@ pipeline {
                     if (response.contains('"error"')) {
                         error "Failed to update production: ${response}"
                     }
+                }
+            }
+        }
+
+        stage('Tag Stable Version') {
+            steps {
+                script {
+                    def tagName = "v${APP_VERSION}-prod"
+                    echo "Requesting Dashboard to tag Manifest Repo: ${tagName}"
+                    
+                    def response = sh(script: """
+                        curl -s -X POST ${WEBUI_API}/api/manifest/tag \\
+                        -H "Content-Type: application/json" \\
+                        -d '{"appName": "${APP_NAME}", "tagName": "${tagName}", "message": "Stable release v${APP_VERSION} for ${APP_NAME}"}'
+                    """, returnStdout: true).trim()
+                    
+                    echo "WebUI Response: ${response}"
                 }
             }
         }
