@@ -48,7 +48,8 @@ pipeline {
                         "buildNumber": "${BUILD_NUMBER}", 
                         "version": "${APP_VERSION}",
                         "jenkinsUrl": "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}",
-                        "inputId": "ApproveDeploy" 
+                        "inputId": "ApproveDeploy",
+                        "source": "jenkins"
                     }
                     """
                     
@@ -76,7 +77,7 @@ pipeline {
                     def response = sh(script: """
                         curl -s -X POST ${WEBUI_API}/api/jenkins/deploy-test \\
                         -H "Content-Type: application/json" \\
-                        -d '{"appName": "${APP_NAME}", "imageTag": "${APP_VERSION}"}'
+                        -d '{"appName": "${APP_NAME}", "imageTag": "${APP_VERSION}", "source": "jenkins"}'
                     """, returnStdout: true).trim()
 
                     echo "WebUI Response: ${response}"
@@ -110,7 +111,8 @@ pipeline {
                         "version": "${APP_VERSION}",
                         "jenkinsUrl": "${JENKINS_URL}/job/${JOB_NAME}/${BUILD_NUMBER}",
                         "inputId": "ConfirmProd",
-                        "isFinal": true
+                        "isFinal": true,
+                        "source": "jenkins"
                     }
                     """
                     
@@ -138,7 +140,7 @@ pipeline {
                     def response = sh(script: """
                         curl -s -X POST ${WEBUI_API}/api/manifest/update-image \\
                         -H "Content-Type: application/json" \\
-                        -d '{"appName": "${APP_NAME}", "env": "prod", "imageTag": "${APP_VERSION}"}'
+                        -d '{"appName": "${APP_NAME}", "env": "prod", "imageTag": "${APP_VERSION}", "source": "jenkins"}'
                     """, returnStdout: true).trim()
 
                     echo "WebUI Response: ${response}"
@@ -159,7 +161,7 @@ pipeline {
                     def response = sh(script: """
                         curl -s -X POST ${WEBUI_API}/api/manifest/tag \\
                         -H "Content-Type: application/json" \\
-                        -d '{"appName": "${APP_NAME}", "tagName": "${tagName}", "message": "Stable release v${APP_VERSION} for ${APP_NAME}"}'
+                        -d '{"appName": "${APP_NAME}", "tagName": "${tagName}", "message": "Stable release v${APP_VERSION} for ${APP_NAME}", "source": "jenkins"}'
                     """, returnStdout: true).trim()
                     
                     echo "WebUI Response: ${response}"

@@ -1,0 +1,22 @@
+name: Automated Tagging
+
+on:
+  push:
+    branches:
+      - main # Jalankan hanya saat merge/push ke main
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Penting: mengambil semua history agar bisa hitung versi
+
+      - name: Generate Tag
+        id: tag_version
+        uses: anothrNick/github-tag-action@1.67.0 # Action populer & stabil
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DEFAULT_BUMP: patch # Default naikkan angka terakhir (1.0.x)
