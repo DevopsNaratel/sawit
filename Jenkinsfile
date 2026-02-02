@@ -10,6 +10,8 @@ pipeline {
         WEBUI_API      = "https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev"
         
         APP_VERSION    = ""
+            // Optional token for auto sync (set in Jenkins/secret)
+            SYNC_JOB_TOKEN = "change_me_sync_token"
     }
 
     stages {
@@ -88,6 +90,12 @@ pipeline {
 
                     echo "Waiting for pods to be ready..."
                     sleep 60
+
+                        def syncHeader = SYNC_JOB_TOKEN?.trim() ? "-H "Authorization: Bearer ${SYNC_JOB_TOKEN}"" : ""
+                        sh(script: """
+                            curl -s -X POST ${WEBUI_API}/api/sync \\
+                            ${syncHeader}
+                        """)
                 }
             }
         }
@@ -148,6 +156,12 @@ pipeline {
                     if (response.contains('"error"')) {
                         error "Failed to update production: ${response}"
                     }
+
+                        def syncHeader = SYNC_JOB_TOKEN?.trim() ? "-H "Authorization: Bearer ${SYNC_JOB_TOKEN}"" : ""
+                        sh(script: """
+                            curl -s -X POST ${WEBUI_API}/api/sync \\
+                            ${syncHeader}
+                        """)
                 }
             }
         }
@@ -165,6 +179,12 @@ pipeline {
                     """, returnStdout: true).trim()
                     
                     echo "WebUI Response: ${response}"
+
+                        def syncHeader = SYNC_JOB_TOKEN?.trim() ? "-H "Authorization: Bearer ${SYNC_JOB_TOKEN}"" : ""
+                        sh(script: """
+                            curl -s -X POST ${WEBUI_API}/api/sync \\
+                            ${syncHeader}
+                        """)
                 }
             }
         }
