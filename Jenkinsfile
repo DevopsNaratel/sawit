@@ -91,11 +91,11 @@ pipeline {
                     echo "Waiting for pods to be ready..."
                     sleep 60
 
-                        def syncHeader = SYNC_JOB_TOKEN?.trim() ? "-H "Authorization: Bearer ${SYNC_JOB_TOKEN}"" : ""
-                        sh(script: """
-                            curl -s -X POST ${WEBUI_API}/api/sync \\
-                            ${syncHeader}
-                        """)
+                    def syncHeader = SYNC_JOB_TOKEN?.trim() ? '-H "Authorization: Bearer ' + SYNC_JOB_TOKEN + '"' : ''
+                    sh(script: """
+                        curl -s -X POST ${WEBUI_API}/api/sync \
+                        ${syncHeader}
+                    """)
                 }
             }
         }
@@ -157,11 +157,11 @@ pipeline {
                         error "Failed to update production: ${response}"
                     }
 
-                        def syncHeader = SYNC_JOB_TOKEN?.trim() ? "-H "Authorization: Bearer ${SYNC_JOB_TOKEN}"" : ""
-                        sh(script: """
-                            curl -s -X POST ${WEBUI_API}/api/sync \\
-                            ${syncHeader}
-                        """)
+                    def syncHeader = SYNC_JOB_TOKEN?.trim() ? '-H "Authorization: Bearer ' + SYNC_JOB_TOKEN + '"' : ''
+                    sh(script: """
+                        curl -s -X POST ${WEBUI_API}/api/sync \
+                        ${syncHeader}
+                    """)
                 }
             }
         }
@@ -180,11 +180,11 @@ pipeline {
                     
                     echo "WebUI Response: ${response}"
 
-                        def syncHeader = SYNC_JOB_TOKEN?.trim() ? "-H "Authorization: Bearer ${SYNC_JOB_TOKEN}"" : ""
-                        sh(script: """
-                            curl -s -X POST ${WEBUI_API}/api/sync \\
-                            ${syncHeader}
-                        """)
+                    def syncHeader = SYNC_JOB_TOKEN?.trim() ? '-H "Authorization: Bearer ' + SYNC_JOB_TOKEN + '"' : ''
+                    sh(script: """
+                        curl -s -X POST ${WEBUI_API}/api/sync \
+                        ${syncHeader}
+                    """)
                 }
             }
         }
