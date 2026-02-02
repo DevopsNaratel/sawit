@@ -1,22 +1,22 @@
+def sendWebhook(status, progress, stageName) {
+    def payload = """
+    {
+        \"jobName\": \"${env.JOB_NAME}\",
+        \"buildNumber\": ${env.BUILD_NUMBER},
+        \"status\": \"${status}\",
+        \"progress\": ${progress},
+        \"stage\": \"${stageName}\"
+    }
+    """
+    sh(script: """
+        curl -s -X POST ${env.WEBUI_API}/api/webhooks/jenkins \\
+        -H \"Content-Type: application/json\" \\
+        -d '${payload}'
+    """)
+}
+
 pipeline {
     agent any
-
-    def sendWebhook = { status, progress, stageName ->
-        def payload = """
-        {
-            \"jobName\": \"${JOB_NAME}\",
-            \"buildNumber\": ${BUILD_NUMBER},
-            \"status\": \"${status}\",
-            \"progress\": ${progress},
-            \"stage\": \"${stageName}\"
-        }
-        """
-        sh(script: """
-            curl -s -X POST ${WEBUI_API}/api/webhooks/jenkins \\
-            -H \"Content-Type: application/json\" \\
-            -d '${payload}'
-        """)
-    }
 
     environment {
         APP_NAME       = "sawit"
