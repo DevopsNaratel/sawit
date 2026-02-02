@@ -1,6 +1,23 @@
 pipeline {
     agent any
 
+    def sendWebhook = { status, progress, stageName ->
+        def payload = """
+        {
+            \"jobName\": \"${JOB_NAME}\",
+            \"buildNumber\": ${BUILD_NUMBER},
+            \"status\": \"${status}\",
+            \"progress\": ${progress},
+            \"stage\": \"${stageName}\"
+        }
+        """
+        sh(script: """
+            curl -s -X POST ${WEBUI_API}/api/webhooks/jenkins \\
+            -H \"Content-Type: application/json\" \\
+            -d '${payload}'
+        """)
+    }
+
     environment {
         APP_NAME       = "sawit"
         DOCKER_IMAGE   = "devopsnaratel/diwapp"
@@ -18,12 +35,14 @@ pipeline {
         stage('Checkout & Get Version') {
             steps {
                 script {
+                    sendWebhook('STARTED', 2, 'Checkout')
                     checkout scm
                     APP_VERSION = sh(
                         script: "git describe --tags --always --abbrev=0 || echo ${BUILD_NUMBER}",
                         returnStdout: true
                     ).trim()
                     echo "Building Version: ${APP_VERSION}"
+                    sendWebhook('IN_PROGRESS', 8, 'Checkout')
                 }
             }
         }
@@ -31,11 +50,13 @@ pipeline {
         stage('Build & Push Docker') {
             steps {
                 script {
+                    sendWebhook('IN_PROGRESS', 20, 'Build')
                     docker.withRegistry('', "${DOCKER_CRED_ID}") {
                         def customImage = docker.build("${DOCKER_IMAGE}:${APP_VERSION}")
                         customImage.push()
                         customImage.push("latest")
                     }
+                    sendWebhook('IN_PROGRESS', 40, 'Build')
                 }
             }
         }
@@ -43,6 +64,7 @@ pipeline {
         stage('Configuration & Approval') {
             steps {
                 script {
+                    sendWebhook('IN_PROGRESS', 55, 'Approval')
                     echo "Registering pending approval in Dashboard..."
                     def payload = """
                     {
@@ -75,6 +97,7 @@ pipeline {
         stage('Deploy Testing (Ephemeral)') {
             steps {
                 script {
+                    sendWebhook('IN_PROGRESS', 65, 'Deploy Testing')
                     echo "Triggering WebUI to create Ephemeral Testing Environment..."
                     def response = sh(script: """
                         curl -s -X POST ${WEBUI_API}/api/jenkins/deploy-test \\
@@ -103,6 +126,7 @@ pipeline {
         stage('Integration Tests') {
             steps {
                 script {
+                    sendWebhook('IN_PROGRESS', 80, 'Tests')
                     echo "Running Tests against Testing Env..."
                 }
             }
@@ -111,6 +135,7 @@ pipeline {
         stage('Final Production Approval') {
             steps {
                 script {
+                    sendWebhook('IN_PROGRESS', 90, 'Prod Approval')
                     echo "Requesting Final Confirmation from Dashboard..."
                     def payload = """
                     {
@@ -144,6 +169,7 @@ pipeline {
         stage('Deploy to Production') {
             steps {
                 script {
+                    sendWebhook('IN_PROGRESS', 95, 'Deploy Production')
                     echo "Updating Production Image Version..."
                     def response = sh(script: """
                         curl -s -X POST ${WEBUI_API}/api/manifest/update-image \\
@@ -169,6 +195,7 @@ pipeline {
         stage('Tag Stable Version') {
             steps {
                 script {
+                    sendWebhook('IN_PROGRESS', 98, 'Tag')
                     def tagName = "v${APP_VERSION}-prod"
                     echo "Requesting Dashboard to tag Manifest Repo: ${tagName}"
                     
@@ -191,6 +218,16 @@ pipeline {
     }
 
     post {
+        success {
+            script {
+                sendWebhook('SUCCESS', 100, 'Completed')
+            }
+        }
+        failure {
+            script {
+                sendWebhook('FAILED', 100, 'Failed')
+            }
+        }
         always {
             script {
                 echo "Cleaning up Ephemeral Testing Environment..."
