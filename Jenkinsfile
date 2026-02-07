@@ -67,7 +67,8 @@ pipeline {
                     {"appName": "${env.APP_NAME}", "buildNumber": "${env.BUILD_NUMBER}", "version": "${env.APP_VERSION}", "jenkinsUrl": "${env.BUILD_URL ?: ''}", "inputId": "ApproveDeploy", "source": "jenkins"}
                     """
 
-                    def approvalHttp = sh(script: "curl -sS -o /dev/null -w '%{http_code}' -X POST ${env.WEBUI_API}/api/jenkins/pending -H 'Content-Type: application/json' -d '${payload}'", returnStdout: true).trim()
+                    writeFile file: 'pending_payload.json', text: payload
+                    def approvalHttp = sh(script: "curl -sS -o /dev/null -w '%{http_code}' -X POST ${env.WEBUI_API}/api/jenkins/pending -H 'Content-Type: application/json' --data @pending_payload.json", returnStdout: true).trim()
                     if (!(approvalHttp ==~ /2\d\d/)) {
                         error "Failed to register pending approval in Dashboard (HTTP ${approvalHttp}). Check WEBUI_API=${env.WEBUI_API}"
                     }
@@ -108,7 +109,9 @@ pipeline {
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 65, 'Deploy Testing')
-                    def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/jenkins/deploy-test -H 'Content-Type: application/json' -d '{"appName": "${env.APP_NAME}", "imageTag": "${env.APP_VERSION}", "source": "jenkins"}' || true", returnStdout: true).trim()
+                        def deployPayload = "{" + ""appName": "${env.APP_NAME}", "imageTag": "${env.APP_VERSION}", "source": "jenkins"}"
+                        writeFile file: 'deploy_test_payload.json', text: deployPayload
+                        def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/jenkins/deploy-test -H 'Content-Type: application/json' --data @deploy_test_payload.json || true", returnStdout: true).trim()
 
                     echo "WebUI Response: ${response}"
 
@@ -139,7 +142,8 @@ pipeline {
                     {"appName": "${env.APP_NAME}", "buildNumber": "${env.BUILD_NUMBER}", "version": "${env.APP_VERSION}", "jenkinsUrl": "${env.BUILD_URL ?: ''}", "inputId": "ConfirmProd", "isFinal": true, "source": "jenkins"}
                     """
 
-                    def finalApprovalHttp = sh(script: "curl -sS -o /dev/null -w '%{http_code}' -X POST ${env.WEBUI_API}/api/jenkins/pending -H 'Content-Type: application/json' -d '${payload}'", returnStdout: true).trim()
+                    writeFile file: 'pending_payload_final.json', text: payload
+                    def finalApprovalHttp = sh(script: "curl -sS -o /dev/null -w '%{http_code}' -X POST ${env.WEBUI_API}/api/jenkins/pending -H 'Content-Type: application/json' --data @pending_payload_final.json", returnStdout: true).trim()
                     if (!(finalApprovalHttp ==~ /2\d\d/)) {
                         error "Failed to register final approval in Dashboard (HTTP ${finalApprovalHttp}). Check WEBUI_API=${env.WEBUI_API}"
                     }
@@ -159,7 +163,9 @@ pipeline {
                 script {
                     sendWebhook('IN_PROGRESS', 95, 'Deploy Production')
                     echo "Updating Production Image Version..."
-                    def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/manifest/update-image -H 'Content-Type: application/json' -d '{"appName": "${env.APP_NAME}", "env": "prod", "imageTag": "${env.APP_VERSION}", "source": "jenkins"}' || true", returnStdout: true).trim()
+                        def updatePayload = "{" + ""appName": "${env.APP_NAME}", "env": "prod", "imageTag": "${env.APP_VERSION}", "source": "jenkins"}"
+                        writeFile file: 'update_image_payload.json', text: updatePayload
+                        def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/manifest/update-image -H 'Content-Type: application/json' --data @update_image_payload.json || true", returnStdout: true).trim()
 
                     echo "WebUI Response: ${response}"
 
@@ -176,7 +182,8 @@ pipeline {
         always {
             script {
                 // Cleanup: destroy ephemeral test env
-                sh(returnStatus: true, script: "curl -sS -X POST ${env.WEBUI_API}/api/jenkins/destroy-test -H 'Content-Type: application/json' -d '{"appName": "${env.APP_NAME}"}' || true")
+                writeFile file: 'destroy_payload.json', text: '{"appName": "${env.APP_NAME}"}'
+                sh(returnStatus: true, script: "curl -sS -X POST ${env.WEBUI_API}/api/jenkins/destroy-test -H 'Content-Type: application/json' --data @destroy_payload.json || true")
             }
             cleanWs()
         }
