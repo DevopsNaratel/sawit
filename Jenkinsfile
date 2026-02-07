@@ -30,17 +30,10 @@ pipeline {
         DOCKER_IMAGE   = "devopsnaratel/sawit"
         DOCKER_CRED_ID = "docker-hub"
 
-        // Optional: set a Jenkins credential that can push tags back to your git repo.
-        // If unset/invalid, tagging still works locally; pushing tags becomes best-effort.
-        GIT_CRED_ID    = "git-token"
-
         // URL WebUI Base
         WEBUI_API      = "https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev"
         // Optional token for /api/sync
         SYNC_JOB_TOKEN = ""
-
-        // Debug pipeline uses a prebuilt image
-        PREBUILT_IMAGE_TAG = "1.0.0"
     }
 
     stages {
