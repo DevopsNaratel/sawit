@@ -27,7 +27,7 @@ pipeline {
 
     environment {
         APP_NAME       = "sawit"
-        DOCKER_IMAGE   = "devopsnaratel/sawit"
+        DOCKER_IMAGE   = "devopsnaratel/diwapp"
         DOCKER_CRED_ID = "docker-hub"
 
         // Optional: set a Jenkins credential that can push tags back to your git repo.
@@ -37,7 +37,7 @@ pipeline {
         // URL WebUI Base
         WEBUI_API      = "https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev"
         // Optional token for /api/sync
-        SYNC_JOB_TOKEN = ""
+        SYNC_JOB_TOKEN = "sync-token"
 
         // Debug pipeline uses a prebuilt image
         PREBUILT_IMAGE_TAG = "1.0.0"
@@ -51,21 +51,8 @@ pipeline {
                     checkout scm
                     sh "git fetch --tags --force"
 
-                    def prebuiltTag = env.PREBUILT_IMAGE_TAG?.trim()
-                    if (prebuiltTag) {
-                        env.APP_VERSION = prebuiltTag
-                        echo "Debug Pipeline: Using prebuilt image version ${env.APP_VERSION}"
-                    } else {
-                        def latestTag = sh(script: "git tag --sort=-creatordate | head -n 1", returnStdout: true).trim()
-                        if (latestTag) {
-                            env.APP_VERSION = latestTag
-                            echo "Using latest git tag ${env.APP_VERSION}"
-                        } else {
-                            def commitShort = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                            env.APP_VERSION = "build-${env.BUILD_NUMBER}-${commitShort}"
-                            echo "No git tags found. Using unique version ${env.APP_VERSION}"
-                        }
-                    }
+                    env.APP_VERSION = env.PREBUILT_IMAGE_TAG
+                    echo "Debug Pipeline: Using prebuilt image version ${env.APP_VERSION}"
                     sendWebhook('IN_PROGRESS', 8, 'Checkout')
                 }
             }
