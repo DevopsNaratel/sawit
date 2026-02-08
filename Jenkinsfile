@@ -1,3 +1,5 @@
+import groovy.json.JsonOutput
+
 // Corrected Jenkinsfile (safe webui integration)
 // - webhook calls are best-effort (won't fail the build)
 // - writes payload to a temp file to avoid shell quoting issues
@@ -83,35 +85,17 @@ pipeline {
             }
         }
 
-        stage('Configuration & Approval') {
-            steps {
-                script {
-                    sendWebhook('IN_PROGRESS', 55, 'Approval')
-                    def payloadObj = [
-                        appName    : env.APP_NAME,
-                        buildNumber: env.BUILD_NUMBER.toString(),
-                        version    : env.APP_VERSION,
-                        jenkinsUrl : (env.BUILD_URL ?: '').toString(),
-                        inputId    : 'ApproveDeploy',
-                        source     : 'jenkins'
-                    ]
-                    writeFile file: 'pending_payload.json', text: JsonOutput.toJson(payloadObj)
-                    registerPending('pending_payload.json')
-
-                    timeout(time: 2, unit: 'HOURS') {
-                        input message: "Waiting for configuration & approval from Dashboard...", id: 'ApproveDeploy'
-                    }
-                }
-            }
-        }
-
         stage('Deploy Testing (Ephemeral)') {
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 65, 'Deploy Testing')
-                        def deployPayload = "{" + ""appName": "${env.APP_NAME}", "imageTag": "${env.APP_VERSION}", "source": "jenkins"}"
-                        writeFile file: 'deploy_test_payload.json', text: deployPayload
-                        def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/jenkins/deploy-test -H 'Content-Type: application/json' --data @deploy_test_payload.json || true", returnStdout: true).trim()
+                    def deployPayload = JsonOutput.toJson([
+                        appName : env.APP_NAME,
+                        imageTag: env.APP_VERSION,
+                        source  : 'jenkins'
+                    ])
+                    writeFile file: 'deploy_test_payload.json', text: deployPayload
+                    def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/jenkins/deploy-test -H 'Content-Type: application/json' --data @deploy_test_payload.json || true", returnStdout: true).trim()
 
                     echo "WebUI Response: ${response}"
 
@@ -163,9 +147,14 @@ pipeline {
                 script {
                     sendWebhook('IN_PROGRESS', 95, 'Deploy Production')
                     echo "Updating Production Image Version..."
-                        def updatePayload = "{" + ""appName": "${env.APP_NAME}", "env": "prod", "imageTag": "${env.APP_VERSION}", "source": "jenkins"}"
-                        writeFile file: 'update_image_payload.json', text: updatePayload
-                        def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/manifest/update-image -H 'Content-Type: application/json' --data @update_image_payload.json || true", returnStdout: true).trim()
+                    def updatePayload = JsonOutput.toJson([
+                        appName : env.APP_NAME,
+                        env     : 'prod',
+                        imageTag: env.APP_VERSION,
+                        source  : 'jenkins'
+                    ])
+                    writeFile file: 'update_image_payload.json', text: updatePayload
+                    def response = sh(script: "curl -s -X POST ${env.WEBUI_API}/api/manifest/update-image -H 'Content-Type: application/json' --data @update_image_payload.json || true", returnStdout: true).trim()
 
                     echo "WebUI Response: ${response}"
 
@@ -182,7 +171,8 @@ pipeline {
         always {
             script {
                 // Cleanup: destroy ephemeral test env
-                writeFile file: 'destroy_payload.json', text: '{"appName": "${env.APP_NAME}"}'
+                def destroyPayload = JsonOutput.toJson([appName: env.APP_NAME])
+                writeFile file: 'destroy_payload.json', text: destroyPayload
                 sh(returnStatus: true, script: "curl -sS -X POST ${env.WEBUI_API}/api/jenkins/destroy-test -H 'Content-Type: application/json' --data @destroy_payload.json || true")
             }
             cleanWs()
