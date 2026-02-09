@@ -39,7 +39,10 @@ pipeline {
                 script {
                     sendWebhook('STARTED', 2, 'Checkout')
                     checkout scm
-                    env.APP_VERSION = sh(script: "git describe --tags --always --abbrev=0 || echo ${BUILD_NUMBER}", returnStdout: true).trim()
+                    env.APP_VERSION = sh(script: "git describe --tags --abbrev=0", returnStdout: true).trim()
+                    if (!env.APP_VERSION) {
+                        error "No git tag found. Release must be tagged."
+                    }
                     echo "Building Version: ${env.APP_VERSION}"
                     sendWebhook('IN_PROGRESS', 8, 'Checkout')
                 }
