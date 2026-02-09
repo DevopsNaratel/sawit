@@ -2,8 +2,8 @@ import groovy.json.JsonOutput
 
 // ============================================
 // PRODUCTION-READY JENKINSFILE
-// OPSI A: Hybrid Agent (agent any, NO podTemplate)
-// Alur pipeline TIDAK DIUBAH
+// OPSI A FIXED: agent per stage + label (K8s pods)
+// PIPELINE FLOW TIDAK DIUBAH
 // ============================================
 
 def sendWebhook(status, progress, stageName) {
@@ -28,7 +28,7 @@ def sendWebhook(status, progress, stageName) {
 }
 
 pipeline {
-    agent any
+    agent none
 
     environment {
         APP_NAME       = "sawit"
@@ -50,6 +50,7 @@ pipeline {
         // STAGE 1: CHECKOUT & GET VERSION
         // ============================================
         stage('Checkout & Get Version') {
+            agent { label 'jenkins-light' }
             steps {
                 script {
                     sendWebhook('STARTED', 5, 'Checkout')
@@ -61,10 +62,8 @@ pipeline {
 
                     if (env.TAG_NAME?.trim()) {
                         version = env.TAG_NAME.trim()
-                        echo "Version from TAG_NAME: ${version}"
                     } else if (env.BRANCH_NAME?.trim()?.startsWith('v')) {
                         version = env.BRANCH_NAME.trim()
-                        echo "Version from BRANCH_NAME: ${version}"
                     } else {
                         def tagOutput = sh(
                             script: '''
@@ -77,13 +76,11 @@ pipeline {
 
                         if (tagOutput != 'NOTAG' && tagOutput.startsWith('v')) {
                             version = tagOutput
-                            echo "Version from git describe: ${version}"
                         }
                     }
 
                     if (!version?.trim()) {
                         version = "dev-${env.BUILD_NUMBER}"
-                        echo "Fallback dev version: ${version}"
                     }
 
                     env.APP_VERSION = version
@@ -98,6 +95,7 @@ pipeline {
         // STAGE 2: BUILD & PUSH DOCKER
         // ============================================
         stage('Build & Push Docker') {
+            agent { label 'jenkins-docker' }
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 25, 'Build')
@@ -124,32 +122,29 @@ pipeline {
         // STAGE 3: CONFIGURATION & APPROVAL
         // ============================================
         stage('Configuration & Approval') {
+            agent { label 'jenkins-light' }
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 55, 'Approval')
 
                     if (env.WEBUI_API?.trim()) {
-                        try {
-                            def payload = JsonOutput.toJson([
-                                appName    : env.APP_NAME,
-                                buildNumber: env.BUILD_NUMBER,
-                                version    : env.APP_VERSION,
-                                jenkinsUrl : env.BUILD_URL ?: '',
-                                inputId    : 'ApproveDeploy',
-                                source     : 'jenkins'
-                            ])
+                        def payload = JsonOutput.toJson([
+                            appName    : env.APP_NAME,
+                            buildNumber: env.BUILD_NUMBER,
+                            version    : env.APP_VERSION,
+                            jenkinsUrl : env.BUILD_URL ?: '',
+                            inputId    : 'ApproveDeploy',
+                            source     : 'jenkins'
+                        ])
 
-                            writeFile file: 'pending_payload.json', text: payload
+                        writeFile file: 'pending_payload.json', text: payload
 
-                            sh(
-                                script: """curl -s -X POST '${env.WEBUI_API.trim()}/api/jenkins/pending' \
-                                           -H 'Content-Type: application/json' \
-                                           --data @pending_payload.json \
-                                           --max-time 15 || true"""
-                            )
-                        } catch (e) {
-                            echo "Dashboard unreachable"
-                        }
+                        sh(
+                            script: """curl -s -X POST '${env.WEBUI_API.trim()}/api/jenkins/pending' \
+                                       -H 'Content-Type: application/json' \
+                                       --data @pending_payload.json \
+                                       --max-time 15 || true"""
+                        )
                     }
 
                     timeout(time: 30, unit: 'MINUTES') {
@@ -167,6 +162,7 @@ pipeline {
         // STAGE 4: DEPLOY TESTING
         // ============================================
         stage('Deploy Testing (Ephemeral)') {
+            agent { label 'jenkins-light' }
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 65, 'Deploy Testing')
@@ -206,6 +202,7 @@ pipeline {
         // STAGE 5: INTEGRATION TESTS
         // ============================================
         stage('Integration Tests') {
+            agent { label 'jenkins-light' }
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 80, 'Tests')
@@ -218,6 +215,7 @@ pipeline {
         // STAGE 6: FINAL PRODUCTION APPROVAL
         // ============================================
         stage('Final Production Approval') {
+            agent { label 'jenkins-light' }
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 90, 'Prod Approval')
@@ -238,6 +236,7 @@ pipeline {
         // STAGE 7: DEPLOY TO PRODUCTION
         // ============================================
         stage('Deploy to Production') {
+            agent { label 'jenkins-light' }
             steps {
                 script {
                     sendWebhook('IN_PROGRESS', 95, 'Deploy Production')
@@ -288,9 +287,10 @@ pipeline {
             }
         }
         always {
-            script {
-                if (env.WEBUI_API?.trim()) {
-                    try {
+            agent { label 'jenkins-light' }
+            steps {
+                script {
+                    if (env.WEBUI_API?.trim()) {
                         def payload = JsonOutput.toJson([appName: env.APP_NAME])
                         writeFile file: 'destroy_payload.json', text: payload
                         sh(
@@ -299,12 +299,10 @@ pipeline {
                                        --data @destroy_payload.json \
                                        --max-time 10 || true"""
                         )
-                    } catch (e) {
-                        echo "Cleanup warning"
                     }
                 }
+                cleanWs()
             }
-            cleanWs()
         }
     }
 }
