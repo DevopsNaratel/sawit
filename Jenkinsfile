@@ -34,40 +34,42 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout & Get Version') {
             steps {
                 script {
                     sendWebhook('STARTED', 2, 'Checkout')
                     checkout scm
-                    // Version strategy:
-                    // - Release build when job runs from a tag (env.TAG_NAME)
-                    // - Dev build when HEAD has no reachable tag
-                    sh(script: "git fetch --tags --force")
-                    def tagName = env.TAG_NAME?.trim()
-                    if (tagName) {
-                        env.APP_VERSION = tagName
-                        echo "Release Version (tag build): ${env.APP_VERSION}"
-                    } else {
-                        def nearestTag = ''
+
+                    sh 'git fetch --tags --force'
+
+                    String version = null
+
+                    // === Multibranch truth source ===
+                    if (env.BRANCH_NAME?.startsWith('v')) {
+                        version = env.BRANCH_NAME
+                        echo "Release Version (from BRANCH_NAME tag): ${version}"
+                    }
+                    // Optional fallback: annotated/lightweight tag
+                    else {
                         try {
-                            nearestTag = sh(script: "git describe --tags --abbrev=0", returnStdout: true).trim()
-                        } catch (err) {
-                            nearestTag = ''
-                        }
-                        if (nearestTag) {
-                            env.APP_VERSION = nearestTag
-                            echo "Release Version (nearest tag): ${env.APP_VERSION}"
-                        } else {
-                            def shortSha = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
-                            def buildId = env.BUILD_NUMBER ? "${env.BUILD_NUMBER}" : shortSha
-                            env.APP_VERSION = "dev-${buildId}"
-                            echo "Dev Version (no tag reachable): ${env.APP_VERSION}"
+                            version = sh(
+                                script: "git describe --tags --exact-match",
+                                returnStdout: true
+                            ).trim()
+                            echo "Release Version (exact git tag): ${version}"
+                        } catch (ignored) {
+                            version = "dev-${env.BUILD_NUMBER}"
+                            echo "Dev Version: ${version}"
                         }
                     }
+
+                    env.APP_VERSION = version
                     sendWebhook('IN_PROGRESS', 8, 'Checkout')
                 }
             }
         }
+
 
         stage('Build & Push Docker') {
             steps {
