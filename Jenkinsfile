@@ -39,11 +39,31 @@ pipeline {
                 script {
                     sendWebhook('STARTED', 2, 'Checkout')
                     checkout scm
-                    env.APP_VERSION = sh(script: "git describe --tags --abbrev=0", returnStdout: true).trim()
-                    if (!env.APP_VERSION) {
-                        error "No git tag found. Release must be tagged."
+                    // Version strategy:
+                    // - Release build when job runs from a tag (env.TAG_NAME)
+                    // - Dev build when HEAD has no reachable tag
+                    sh(script: "git fetch --tags --force")
+                    def tagName = env.TAG_NAME?.trim()
+                    if (tagName) {
+                        env.APP_VERSION = tagName
+                        echo "Release Version (tag build): ${env.APP_VERSION}"
+                    } else {
+                        def nearestTag = ''
+                        try {
+                            nearestTag = sh(script: "git describe --tags --abbrev=0", returnStdout: true).trim()
+                        } catch (err) {
+                            nearestTag = ''
+                        }
+                        if (nearestTag) {
+                            env.APP_VERSION = nearestTag
+                            echo "Release Version (nearest tag): ${env.APP_VERSION}"
+                        } else {
+                            def shortSha = sh(script: "git rev-parse --short HEAD", returnStdout: true).trim()
+                            def buildId = env.BUILD_NUMBER ? "${env.BUILD_NUMBER}" : shortSha
+                            env.APP_VERSION = "dev-${buildId}"
+                            echo "Dev Version (no tag reachable): ${env.APP_VERSION}"
+                        }
                     }
-                    echo "Building Version: ${env.APP_VERSION}"
                     sendWebhook('IN_PROGRESS', 8, 'Checkout')
                 }
             }
