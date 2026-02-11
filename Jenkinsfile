@@ -2,36 +2,16 @@ import groovy.json.JsonOutput
 
 // =====================================================
 // FINAL PRODUCTION JENKINSFILE
-// Agent per stage + Kubernetes pods (k3s safe)
+// GitHub private + Docker Hub credentials
 // =====================================================
-
-def sendWebhook(status, progress, stageName) {
-    if (!env.WEBUI_API?.trim()) return
-
-    def payload = JsonOutput.toJson([
-        jobName    : env.JOB_NAME,
-        buildNumber: env.BUILD_NUMBER,
-        status     : status,
-        progress   : progress,
-        stage      : stageName
-    ])
-
-    writeFile file: 'webui_payload.json', text: payload
-    sh """
-        curl -s -X POST '${env.WEBUI_API}/api/webhooks/jenkins' \
-        -H 'Content-Type: application/json' \
-        --data @webui_payload.json \
-        --max-time 10 || true
-    """
-}
 
 pipeline {
     agent none
 
     environment {
-        APP_NAME      = 'sawit'
-        DOCKER_IMAGE  = 'devopsnaratel/sawit'
-        WEBUI_API     = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
+        APP_NAME       = 'sawit'
+        DOCKER_IMAGE   = 'devopsnaratel/sawit'
+        WEBUI_API      = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
         SYNC_JOB_TOKEN = 'sync-token'
     }
 
@@ -50,11 +30,19 @@ pipeline {
             agent { label 'jenkins-light' }
             steps {
                 script {
-                    sendWebhook('STARTED', 5, 'Checkout')
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: scm.branches,
+                        userRemoteConfigs: [[
+                            url: scm.userRemoteConfigs[0].url,
+                            credentialsId: 'github-cred'
+                        ]]
+                    ])
+                }
 
-                    checkout scm
-                    sh 'git fetch --tags --force'
+                sh 'git fetch --tags --force'
 
+                script {
                     String version = null
 
                     if (env.TAG_NAME?.trim()) {
@@ -72,8 +60,6 @@ pipeline {
 
                     env.APP_VERSION = version ?: "dev-${env.BUILD_NUMBER}"
                     echo "APP_VERSION = ${env.APP_VERSION}"
-
-                    sendWebhook('IN_PROGRESS', 10, 'Checkout')
                 }
             }
         }
@@ -85,11 +71,20 @@ pipeline {
             agent { label 'jenkins-docker' }
 
             environment {
-                DOCKER_CREDS = credentials('docker-hub')
+                DOCKER_CREDS = credentials('docker-cred')
             }
 
             steps {
-                checkout scm
+                script {
+                    checkout([
+                        $class: 'GitSCM',
+                        branches: scm.branches,
+                        userRemoteConfigs: [[
+                            url: scm.userRemoteConfigs[0].url,
+                            credentialsId: 'github-cred'
+                        ]]
+                    ])
+                }
 
                 container('docker') {
                     sh '''
@@ -98,12 +93,12 @@ pipeline {
                         echo "$DOCKER_CREDS_PSW" | docker login \
                           -u "$DOCKER_CREDS_USR" --password-stdin
 
-                        docker build -t devopsnaratel/sawit:${APP_VERSION} .
-                        docker push devopsnaratel/sawit:${APP_VERSION}
+                        docker build -t ${DOCKER_IMAGE}:${APP_VERSION} .
+                        docker push ${DOCKER_IMAGE}:${APP_VERSION}
 
-                        if echo "${APP_VERSION}" | grep -Eq '^v[0-9]+\\.[0-9]+\\.[0-9]+$'; then
-                          docker tag devopsnaratel/sawit:${APP_VERSION} devopsnaratel/sawit:latest
-                          docker push devopsnaratel/sawit:latest
+                        if echo "${APP_VERSION}" | grep -Eq '^v[0-9]+.[0-9]+.[0-9]+$'; then
+                            docker tag ${DOCKER_IMAGE}:${APP_VERSION} ${DOCKER_IMAGE}:latest
+                            docker push ${DOCKER_IMAGE}:latest
                         fi
                     '''
                 }
@@ -111,69 +106,67 @@ pipeline {
         }
 
         // ===============================
-        // STAGE 3: APPROVAL (TEST)
-        // ===============================
-        stage('Approval Testing') {
-            agent { label 'jenkins-light' }
-            steps {
-                script {
-                    sendWebhook('IN_PROGRESS', 50, 'Approval')
-
-                    timeout(time: 30, unit: 'MINUTES') {
-                        input(
-                            message: "Deploy ${APP_NAME}:${APP_VERSION} to TESTING?",
-                            ok: 'Deploy'
-                        )
-                    }
-                }
-            }
-        }
-
-        // ===============================
-        // STAGE 4: DEPLOY TESTING
+        // STAGE 3: DEPLOY TESTING (AUTO)
         // ===============================
         stage('Deploy Testing') {
             agent { label 'jenkins-light' }
             steps {
                 script {
-                    sendWebhook('IN_PROGRESS', 65, 'Deploy Testing')
-
                     def payload = JsonOutput.toJson([
-                        appName : APP_NAME,
-                        imageTag: APP_VERSION
+                        appName  : APP_NAME,
+                        imageTag : APP_VERSION
                     ])
 
                     writeFile file: 'deploy_test.json', text: payload
 
                     sh """
                         curl -s -X POST '${WEBUI_API}/api/jenkins/deploy-test' \
-                        -H 'Content-Type: application/json' \
-                        --data @deploy_test.json || true
+                          -H 'Content-Type: application/json' \
+                          --data @deploy_test.json || true
                     """
 
                     sh """
                         curl -s -X POST '${WEBUI_API}/api/sync' \
-                        -H 'Authorization: Bearer ${SYNC_JOB_TOKEN}' || true
+                          -H 'Authorization: Bearer ${SYNC_JOB_TOKEN}' || true
                     """
                 }
             }
         }
 
         // ===============================
-        // STAGE 5: FINAL PROD APPROVAL
+        // STAGE 4: JENKINS APPROVAL (PROD)
         // ===============================
         stage('Approval Production') {
             agent { label 'jenkins-light' }
             steps {
-                script {
-                    sendWebhook('IN_PROGRESS', 85, 'Prod Approval')
+                timeout(time: 30, unit: 'MINUTES') {
+                    input(
+                        message: "DEPLOY ${APP_NAME}:${APP_VERSION} TO PRODUCTION?",
+                        ok: 'DEPLOY PROD'
+                    )
+                }
+            }
+        }
 
-                    timeout(time: 30, unit: 'MINUTES') {
-                        input(
-                            message: "DEPLOY ${APP_NAME}:${APP_VERSION} TO PRODUCTION?",
-                            ok: 'DEPLOY PROD'
-                        )
-                    }
+        // ===============================
+        // STAGE 5: DESTROY TESTING ENV
+        // ===============================
+        stage('Destroy Testing Environment') {
+            agent { label 'jenkins-light' }
+            steps {
+                script {
+                    def payload = JsonOutput.toJson([
+                        appName : APP_NAME,
+                        source  : 'jenkins'
+                    ])
+
+                    writeFile file: 'destroy_test.json', text: payload
+
+                    sh """
+                        curl -s -X POST '${WEBUI_API}/api/jenkins/destroy-test' \
+                          -H 'Content-Type: application/json' \
+                          --data @destroy_test.json || true
+                    """
                 }
             }
         }
@@ -185,25 +178,23 @@ pipeline {
             agent { label 'jenkins-light' }
             steps {
                 script {
-                    sendWebhook('IN_PROGRESS', 95, 'Deploy Prod')
-
                     def payload = JsonOutput.toJson([
-                        appName : APP_NAME,
-                        imageTag: APP_VERSION,
-                        env     : 'prod'
+                        appName  : APP_NAME,
+                        imageTag : APP_VERSION,
+                        env      : 'prod'
                     ])
 
                     writeFile file: 'deploy_prod.json', text: payload
 
                     sh """
                         curl -s -X POST '${WEBUI_API}/api/manifest/update-image' \
-                        -H 'Content-Type: application/json' \
-                        --data @deploy_prod.json || true
+                          -H 'Content-Type: application/json' \
+                          --data @deploy_prod.json || true
                     """
 
                     sh """
                         curl -s -X POST '${WEBUI_API}/api/sync' \
-                        -H 'Authorization: Bearer ${SYNC_JOB_TOKEN}' || true
+                          -H 'Authorization: Bearer ${SYNC_JOB_TOKEN}' || true
                     """
                 }
             }
@@ -211,21 +202,9 @@ pipeline {
     }
 
     post {
-        success {
-            script {
-                sendWebhook('SUCCESS', 100, 'Completed')
-            }
-        }
-        failure {
-            script {
-                sendWebhook('FAILED', 100, 'Failed')
-            }
-        }
         always {
-            script {
-                node('jenkins-light') {
-                    cleanWs()
-                }
+            node('jenkins-light') {
+                cleanWs()
             }
         }
     }
