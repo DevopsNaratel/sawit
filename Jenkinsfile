@@ -9,7 +9,7 @@ pipeline {
     agent none
 
     environment {
-        APP_NAME       = 'sawit'
+        APP_NAME       = 'sawit-app'
         DOCKER_IMAGE   = 'devopsnaratel/sawit'
         WEBUI_API      = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
         SYNC_JOB_TOKEN = 'sync-token'
