@@ -24,6 +24,20 @@ pipeline {
     stages {
 
         // ===============================
+        // STAGE 0: TRIGGER AUTORUN
+        // ===============================
+		stage('Gate: Tag Only') {
+		    when {
+		        not { buildingTag() }
+		    }
+		    steps {
+		        error("This pipeline runs ONLY for Git TAG builds")
+		    }
+		}
+
+
+
+        // ===============================
         // STAGE 1: CHECKOUT & VERSIONING
         // ===============================
         stage('Checkout & Versioning') {
