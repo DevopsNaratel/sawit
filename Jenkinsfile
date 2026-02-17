@@ -11,7 +11,7 @@ pipeline {
     environment {
         APP_NAME       = 'sawit-app'
         DOCKER_IMAGE   = 'devopsnaratel/sawit'
-        WEBUI_API      = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
+        WEBUI_API      = 'http://117.103.71.154:31078'
         SYNC_JOB_TOKEN = 'sync-token'
     }
 
@@ -22,20 +22,6 @@ pipeline {
     }
 
     stages {
-
-        // ===============================
-        // STAGE 0: TRIGGER AUTORUN
-        // ===============================
-		stage('Gate: Tag Only') {
-		    when {
-		        not { buildingTag() }
-		    }
-		    steps {
-		        error("This pipeline runs ONLY for Git TAG builds")
-		    }
-		}
-
-
 
         // ===============================
         // STAGE 1: CHECKOUT & VERSIONING
