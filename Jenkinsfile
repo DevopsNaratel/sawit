@@ -4,8 +4,8 @@ pipeline {
     agent none
 
     environment {
-        APP_NAME     = 'diwapp'
-        DOCKER_IMAGE = 'devopsnaratel/diwapp'
+        APP_NAME     = 'laravel-app'
+        DOCKER_IMAGE = 'nginx'
         WEBUI_API    = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
 
         // Jenkins Secret Text
@@ -72,17 +72,13 @@ pipeline {
 
                     writeFile file: 'deploy_test.json', text: payload
 
-                    sh """
-                      curl -s -X POST '${WEBUI_API}/api/jenkins/deploy-test' \
-                        -H 'Content-Type: application/json' \
-                        -H 'x-auth: ${NARAOPS_API_KEY}' \
-                        --data @deploy_test.json
-                    """
+                    sh '''
+                      curl -s -X POST "$WEBUI_API/api/jenkins/deploy-test"                         -H "Content-Type: application/json"                         -H "x-auth: $NARAOPS_API_KEY"                         --data @deploy_test.json
+                    '''
 
-                    sh """
-                      curl -s -X POST '${WEBUI_API}/api/sync' \
-                        -H 'x-auth: ${NARAOPS_API_KEY}'
-                    """
+                    sh '''
+                      curl -s -X POST "$WEBUI_API/api/sync"                         -H "x-auth: $NARAOPS_API_KEY"
+                    '''
                 }
             }
         }
@@ -99,10 +95,9 @@ pipeline {
         stage('Destroy Testing') {
             agent { label 'jenkins-light' }
             steps {
-                sh """
-                  curl -s -X POST '${WEBUI_API}/api/jenkins/destroy-test' \
-                    -H 'x-auth: ${NARAOPS_API_KEY}'
-                """
+                sh '''
+                  curl -s -X POST "$WEBUI_API/api/jenkins/destroy-test"                     -H "x-auth: $NARAOPS_API_KEY"
+                '''
             }
         }
 
@@ -118,17 +113,13 @@ pipeline {
 
                     writeFile file: 'deploy_prod.json', text: payload
 
-                    sh """
-                      curl -s -X POST '${WEBUI_API}/api/manifest/update-image' \
-                        -H 'Content-Type: application/json' \
-                        -H 'x-auth: ${NARAOPS_API_KEY}' \
-                        --data @deploy_prod.json
-                    """
+                    sh '''
+                      curl -s -X POST "$WEBUI_API/api/manifest/update-image"                         -H "Content-Type: application/json"                         -H "x-auth: $NARAOPS_API_KEY"                         --data @deploy_prod.json
+                    '''
 
-                    sh """
-                      curl -s -X POST '${WEBUI_API}/api/sync' \
-                        -H 'x-auth: ${NARAOPS_API_KEY}'
-                    """
+                    sh '''
+                      curl -s -X POST "$WEBUI_API/api/sync"                         -H "x-auth: $NARAOPS_API_KEY"
+                    '''
                 }
             }
         }
