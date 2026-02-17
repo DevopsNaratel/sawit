@@ -8,7 +8,7 @@ pipeline {
         DOCKER_IMAGE = 'devopsnaratel/diwapp'
         WEBUI_API    = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
 
-        // Jenkins Credential (Secret Text)
+        // Jenkins Secret Text
         NARAOPS_API_KEY = credentials('naraops-api-cred')
     }
 
@@ -38,6 +38,8 @@ pipeline {
                     env.APP_VERSION = version
                     echo "APP_VERSION=${APP_VERSION}"
                 }
+
+                stash name: 'source', includes: '**/*'
             }
         }
 
@@ -47,12 +49,15 @@ pipeline {
                 DOCKER_CREDS = credentials('docker-cred')
             }
             steps {
-                checkout scm
-                sh '''
-                  echo "$DOCKER_CREDS_PSW" | docker login -u "$DOCKER_CREDS_USR" --password-stdin
-                  docker build -t $DOCKER_IMAGE:$APP_VERSION .
-                  docker push $DOCKER_IMAGE:$APP_VERSION
-                '''
+                unstash 'source'
+
+                container('docker') {
+                    sh '''
+                      echo "$DOCKER_CREDS_PSW" | docker login -u "$DOCKER_CREDS_USR" --password-stdin
+                      docker build -t $DOCKER_IMAGE:$APP_VERSION .
+                      docker push $DOCKER_IMAGE:$APP_VERSION
+                    '''
+                }
             }
         }
 
@@ -127,11 +132,12 @@ pipeline {
                 }
             }
         }
-    }
 
-    post {
-        always {
-            cleanWs()
+        stage('Cleanup') {
+            agent { label 'jenkins-light' }
+            steps {
+                cleanWs()
+            }
         }
     }
 }
