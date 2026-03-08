@@ -301,6 +301,13 @@ curl --fail --connect-timeout 5 --max-time 30 \
       echo "FAILED: pipeline failed for ${APP_NAME}"
     }
 
+    aborted {
+      script {
+        currentBuild.rawBuild.delete()
+        echo "Build aborted and cleared from history"
+      }
+    }
+
   }
 
 }
