@@ -9,6 +9,10 @@ pipeline {
     buildDiscarder(logRotator(numToKeepStr: '20'))
   }
 
+  triggers {
+    githubPush()
+  }
+
   environment {
     APP_NAME       = 'sawit'
     FOLDER_NAME    = '044-sawit'
