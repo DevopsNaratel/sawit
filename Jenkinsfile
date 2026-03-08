@@ -301,12 +301,20 @@ curl --fail --connect-timeout 5 --max-time 30 \
       echo "FAILED: pipeline failed for ${APP_NAME}"
     }
 
-    aborted {
-      script {
-        currentBuild.rawBuild.delete()
-        echo "Build aborted and cleared from history"
+  aborted {
+    script {
+      try {
+        def jobName = env.JOB_NAME
+        def buildNum = env.BUILD_NUMBER.toInteger()
+        def job = Jenkins.instance.getItemByFullName(jobName)
+        def build = job.getBuildByNumber(buildNum)
+        build.delete()
+        echo "Aborted build #${buildNum} cleared from history"
+      } catch (e) {
+        echo "Could not delete build: ${e.message}"
       }
     }
+  }
 
   }
 
