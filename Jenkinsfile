@@ -301,10 +301,6 @@ curl --fail --connect-timeout 5 --max-time 30 \
       echo "FAILED: pipeline failed for ${APP_NAME}"
     }
 
-    always {
-      deleteDir()
-    }
-
   }
 
 }
