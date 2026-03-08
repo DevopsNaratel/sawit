@@ -1,0 +1,10 @@
+{
+  "webhookUrl": "https://jenkins.example.com/github-webhook/",
+  "webhookSecret": "optional-custom-secret",
+  "events": [
+    "push",
+    "pull_request"
+  ],
+  "configuredAt": "2026-03-08T09:29:17.471Z",
+  "_note": "Register this webhook via your CI/CD bootstrap script or Terraform provider."
+}
