@@ -5,7 +5,7 @@ standardDevOpsv2(
   folderName:    '044-sawit',
   imageRepository: 'docker.io/devopsnaratel/sawit',
   appRepository: 'https://github.com/DevopsNaratel/sawit',
-  scaffolderUrl: 'http://scaffolder.yourdomain.com'
+  scaffolderUrl: 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
 )
 
 
@@ -31,7 +31,7 @@ standardDevOpsv2(
 //     FOLDER_NAME    = '044-sawit'
 //     IMAGE_REPO     = 'docker.io/devopsnaratel/sawit'
 //     APP_REPO       = 'https://github.com/DevopsNaratel/sawit'
-//     SCAFFOLDER_URL = 'http://scaffolder.yourdomain.com'
+//     SCAFFOLDER_URL = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
 //   }
 
 //   stages {
