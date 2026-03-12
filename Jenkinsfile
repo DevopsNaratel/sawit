@@ -2,7 +2,7 @@
 
 standardDevOpsv2(
   appName:       'sawit',
-  folderName:    '002-sawit',
+  folderName:    '069-sawit',
   imageRepository: 'docker.io/devopsnaratel/sawit',
   appRepository: 'https://github.com/DevopsNaratel/sawit',
   scaffolderUrl: 'http://naraops-backend.naraops.svc.cluster.local'
@@ -28,7 +28,7 @@ standardDevOpsv2(
 
 //   environment {
 //     APP_NAME       = 'sawit'
-//     FOLDER_NAME    = '002-sawit'
+//     FOLDER_NAME    = '069-sawit'
 //     IMAGE_REPO     = 'docker.io/devopsnaratel/sawit'
 //     APP_REPO       = 'https://github.com/DevopsNaratel/sawit'
 //     SCAFFOLDER_URL = 'http://naraops-backend.naraops.svc.cluster.local'
