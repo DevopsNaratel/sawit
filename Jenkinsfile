@@ -1,11 +1,11 @@
 @Library('jenkins-pipeline-library') _
 
 standardDevOpsv2(
-  appName:       'contoh',
-  folderName:    '100-contoh',
+  appName:       'sawit',
+  folderName:    '011-sawit',
   imageRepository: 'docker.io/devopsnaratel/sawit',
   appRepository: 'https://github.com/DevopsNaratel/sawit',
-  scaffolderUrl: 'http://naraops-backend.naraops.svc.cluster.local'
+  scaffolderUrl: 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
 )
 
 
@@ -27,11 +27,11 @@ standardDevOpsv2(
 //   }
 
 //   environment {
-//     APP_NAME       = 'contoh'
-//     FOLDER_NAME    = '100-contoh'
+//     APP_NAME       = 'sawit'
+//     FOLDER_NAME    = '011-sawit'
 //     IMAGE_REPO     = 'docker.io/devopsnaratel/sawit'
 //     APP_REPO       = 'https://github.com/DevopsNaratel/sawit'
-//     SCAFFOLDER_URL = 'http://naraops-backend.naraops.svc.cluster.local'
+//     SCAFFOLDER_URL = 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
 //   }
 
 //   stages {
