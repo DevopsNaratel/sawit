@@ -1,10 +1,10 @@
 @Library('jenkins-pipeline-library') _
 
 standardDevOpsv2(
-  appName:       'sawit',
-  folderName:    '028-sawit',
-  imageRepository: 'docker.io/devopsnaratel/sawit',
-  appRepository: 'https://github.com/DevopsNaratel/sawit',
-  scaffolderUrl: 'http://naraops-backend.naraops.svc.cluster.local'
+  appName:       'experimentum',
+  folderName:    '009-experimentum',
+  imageRepository: 'docker.io/devopsnaratel/experimentum',
+  appRepository: 'https://github.com/devopsnaratel/sawit',
+  scaffolderUrl: 'http://117.103.70.74:31207/'
 )
 
