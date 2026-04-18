@@ -5,6 +5,6 @@ standardDevOpsv2(
   folderName:    '009-experimentum',
   imageRepository: 'docker.io/devopsnaratel/experimentum',
   appRepository: 'https://github.com/devopsnaratel/sawit',
-  scaffolderUrl: 'http://117.103.70.74:31207/'
+  scaffolderUrl: 'http://naraops-backend.naraopsv2.svc.cluster.local'
 )
 
