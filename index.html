@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ASCII Pattern</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: black;
+      overflow: hidden;
+    }
+
+    pre {
+      margin: 0;
+      font-family: monospace;
+      font-size: 14px;
+      line-height: 14px; /* penting */
+      color: #00ff9f;
+      white-space: pre;
+    }
+  </style>
+</head>
+<body>
+  <pre id="ascii"></pre>
+
+  <script>
+    const chars = ['/', '\\'];
+
+    function getCharWidth() {
+      const span = document.createElement("span");
+      span.textContent = "A";
+      span.style.visibility = "hidden";
+      span.style.position = "absolute";
+      span.style.fontFamily = "monospace";
+      span.style.fontSize = "14px";
+      document.body.appendChild(span);
+
+      const width = span.getBoundingClientRect().width;
+      document.body.removeChild(span);
+
+      return width;
+    }
+
+    function generatePattern() {
+      const pre = document.getElementById('ascii');
+
+      const charW = getCharWidth();
+      const charH = 14; // sama dengan line-height
+
+      const cols = Math.ceil(window.innerWidth / charW);
+      const rows = Math.ceil(window.innerHeight / charH) + 1; // +1 biar nutup bawah
+
+      let output = '';
+
+      for (let y = 0; y < rows; y++) {
+        let line = '';
+        for (let x = 0; x < cols; x++) {
+          const char = chars[(x + y) % chars.length];
+          line += char;
+        }
+        output += line + '\n';
+      }
+
+      pre.textContent = output;
+    }
+
+    generatePattern();
+    window.addEventListener('resize', generatePattern);
+  </script>
+</body>
+</html>
