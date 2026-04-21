@@ -1,6 +1,6 @@
 @Library('jenkins-pipeline-library') _
 
-appPipeline(
+appPipelinev2(
   appName:       'experimentum',
   folderName:    '009-experimentum',
   imageRepository: 'docker.io/devopsnaratel/experimentum',
