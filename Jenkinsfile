@@ -5,6 +5,7 @@ appPipelinev2(
   folderName:    '001-sawit',
   imageRepository: 'docker.io/devopsnaratel/sawit',
   appRepository: 'https://github.com/DevopsNaratel/sawit',
-  scaffolderUrl: 'https://nonfortifiable-mandie-uncontradictablely.ngrok-free.dev'
+  manifestRepository: 'https://github.com/diwamln/Manifest-Repository-V2',
 )
+
 
