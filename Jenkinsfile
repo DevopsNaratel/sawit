@@ -5,5 +5,5 @@ appPipelinev2(
   folderName:        '001-tester',
   imageRepository:   'docker.io/devopsnaratel/tester',
   appRepository:     'https://github.com/DevopsNaratel/sawit',
-  manifestRepository: 'https://github.com/DevopsNaratel/Manifest-Repository'
+  manifestRepository: 'https://github.com/DevopsNaratel/Manifest-Repository-BankDev'
 )
