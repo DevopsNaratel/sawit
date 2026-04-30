@@ -1,11 +1,9 @@
 @Library('jenkins-pipeline-library') _
 
-
-appPipelinev3(
-  appName:       'tester',
-  folderName:    '001-tester',
-  imageRepository: 'ghcr.io/devops-naratel/tester',
-  appRepository: 'https://github.com/DevopsNaratel/sawit',
-  manifestRepository: 'https://github.com/DevopsNaratel/Manifest-Repository-BankDev/',
-  
+appPipelinev2(
+  appName:           'qwerty',
+  folderName:        '037-qwerty',
+  imageRepository:   'ghcr.io/devopsnaratel/qwerty',
+  appRepository:     'https://github.com/DevopsNaratel/sawit',
+  manifestRepository: 'https://github.com/DevopsNaratel/Manifest-Repository'
 )
